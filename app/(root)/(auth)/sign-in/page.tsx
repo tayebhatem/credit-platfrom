@@ -19,6 +19,7 @@ import { login } from "@/actions/login"
 import { useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { account } from "@/lib/appwrite"
+import GoogleAuth from "@/components/auth/GoogleAuth"
 const SignInPage = () => {
 const router=useRouter()
 const [isLoading,signIn]=useTransition()
@@ -122,10 +123,8 @@ const userId = urlParams.get('userId');
         <Button type="submit" className={`w-full ${isLoading && 'opacity-50'}`} disabled={isLoading}>
           دخول
         </Button>
-        <Button variant="outline" className="w-full flex items-center gap-x-2" >
-        <FcGoogle className="w-5 h-5"/>
-          <span>Google</span> 
-        </Button>
+        <GoogleAuth/>
+        
       </div>
       <div className="mt-4 text-center text-sm">
        لا تملك حساب؟

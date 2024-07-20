@@ -1,4 +1,4 @@
-import { Client, Account } from 'appwrite';
+import { Client, Account, OAuthProvider } from 'appwrite';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
@@ -18,7 +18,17 @@ export const config={
     userTableId:'669ab07b0034c7bb657d'
 }
 
-
+export const googleAuth=async()=>{
+    try {
+      account.createOAuth2Session(
+          OAuthProvider.Google, // provider
+          'http://localhost:3000/dashboard', // redirect here on success
+          'http://localhost:3000', // redirect here on failure
+      );
+    } catch (error) {
+       console.log(error)
+    }
+    }
 export const logout=async()=>{
     try {
       await  account.deleteSession('current');

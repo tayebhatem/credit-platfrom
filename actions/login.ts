@@ -11,3 +11,4 @@ export const login = async (email:string, password:string) => {
     throw new Error('somthing went wrong')
  }
   };
+

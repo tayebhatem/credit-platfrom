@@ -18,6 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { register } from "@/actions/register"
 import { account } from "@/lib/appwrite"
 import { useEffect, useTransition } from "react"
+import GoogleAuth from "@/components/auth/GoogleAuth"
 const SignUpPage = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const secret = urlParams.get('secret');
@@ -154,10 +155,7 @@ const SignUpPage = () => {
         <Button type="submit" className={`w-full ${isLoading && 'opacity-50'}`} disabled={isLoading}>
           دخول
         </Button>
-        <Button variant="outline" className="w-full flex items-center gap-x-2">
-        <FcGoogle className="w-5 h-5"/>
-          <span>Google</span> 
-        </Button>
+        <GoogleAuth/>
       </div>
       <div className="mt-4 text-center text-sm">
        لديك حساب ؟
