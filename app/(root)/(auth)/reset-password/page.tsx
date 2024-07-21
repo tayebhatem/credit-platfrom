@@ -13,42 +13,50 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { FcGoogle } from "react-icons/fc";
-import { LoginSchema } from "@/schemas"
+import { LoginSchema, PasswordSchema } from "@/schemas"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { login } from "@/actions/login"
 import { useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { account } from "@/lib/appwrite"
 import GoogleAuth from "@/components/auth/GoogleAuth"
-const SignInPage = () => {
+import { toast } from "sonner"
+import { Check } from "lucide-react"
+const ResetPasswordPage = () => {
 const router=useRouter()
-const [isLoading,signIn]=useTransition()
+const [isLoading,save]=useTransition()
 const urlParams = new URLSearchParams(window.location.search);
 
 const secret = urlParams.get('secret');
 const userId = urlParams.get('userId');
 
-   const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+   const form = useForm<z.infer<typeof PasswordSchema>>({
+    resolver: zodResolver(PasswordSchema),
     defaultValues: {
-      email: "",
-      password:""
+      password:"",
+      passwordConfirm:""
     },
   })
  
   
-   function onSubmit(values: z.infer<typeof LoginSchema>) {
-    signIn(async()=>{
-      const {email,password}=values
+   function onSubmit(values: z.infer<typeof PasswordSchema>) {
+    save(async()=>{
+      const {password,passwordConfirm}=values
      try {
-      const response=await login(email,password);
-      
-      if(response.message==='success'){
-        router.push('../../../dashboard')
-      }else{
-       console.log(response.message)
-      }
-      
+        if(userId && secret) {
+            const promise = account.updateRecovery(userId, secret,password);
+            promise.then(function (response) {
+                const message=''
+                toast("تأكيد البريد الإلكتروني", {
+                    description: 'تم إعادة تعيين كلمة المرور',
+                    icon:<Check/>
+                   
+                  })   
+              console.log(response);
+          }, function (error) {
+              console.log(error);
+          });
+          }
      } catch (error) {
       console.log(error)
      }
@@ -56,14 +64,9 @@ const userId = urlParams.get('userId');
   }
   useEffect(()=>{
    try {
-    if(userId && secret) {
-      const promise = account.updateVerification(userId, secret);
-      promise.then(function (response) {
-        console.log(response);
-    }, function (error) {
-        console.log(error);
-    });
-    }
+    if(!userId || !secret) {
+
+   }
    } catch (error) {
     
    }
@@ -73,34 +76,12 @@ const userId = urlParams.get('userId');
        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
        <Card className="mx-auto max-w-sm">
     <CardHeader>
-      <CardTitle className="text-2xl text-center">تسجيل الدخول</CardTitle>
+      <CardTitle className="text-2xl text-center"> إنشاء كلمة المرور</CardTitle>
      
     </CardHeader>
     <CardContent>
       <div className="grid gap-4">
       <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              
-              <FormLabel>البريد الإلكتروني</FormLabel>
-              
-              <FormControl>
-                <Input
-                 id="email"
-                 type="email"
-                 placeholder="m@example.com"
-                 
-                 {...field} />
-              </FormControl>
-             
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-<FormField
           control={form.control}
           name="password"
           render={({ field }) => (
@@ -121,21 +102,42 @@ const userId = urlParams.get('userId');
             </FormItem>
           )}
         />
-         <Link href="/send-verification" className="ml-auto inline-block text-sm underline w-full">
-             نسيت كلمة المرور؟
-            </Link>
+        
+        <FormField
+          control={form.control}
+          name="passwordConfirm"
+          render={({ field }) => (
+            <FormItem>
+              
+              <FormLabel> تأكيد كلمة المرور</FormLabel>
+              
+              <FormControl>
+                <Input
+                 id="passwordConfirm"
+                 type="password"
+                placeholder="**********"
+                 
+                 {...field} />
+              </FormControl>
+             
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
         
         
         <Button type="submit" className={`w-full ${isLoading && 'opacity-50'}`} disabled={isLoading}>
-          دخول
+          حفظ
         </Button>
-        <GoogleAuth/>
+   
 
       </div>
       <div className="mt-4 text-center text-sm">
-       لا تملك حساب؟
-        <Link href="/sign-up" className="underline text-primary font-semibold">
-          إنشاء حساب
+       قمت بتعيين كلمة المرور ؟  
+        <Link href="/sign-in" className="underline text-primary font-semibold">
+           تسجيل الدخول
         </Link>
       </div>
     </CardContent>
@@ -147,4 +149,4 @@ const userId = urlParams.get('userId');
   )
 }
 
-export default SignInPage
+export default ResetPasswordPage

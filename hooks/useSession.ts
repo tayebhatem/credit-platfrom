@@ -17,7 +17,7 @@ const getSession=async()=>{
       }
 }     
 getSession()
-     }, [session])
+     }, [])
      
 
 return {session,loading}

@@ -1,61 +1,81 @@
 'use client'
-import React from 'react'
+import React, { createContext, useCallback, useEffect, useState } from 'react'
 import {
     ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
+
   } from "@tanstack/react-table"
-   
-  import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-import { DataTable } from '@/components/data-table'
+
+import { ClientTable } from '@/components/table/ClientTable'
+import { Models } from 'appwrite'
+import { getAllClients } from '@/actions/getAllClients'
+import { CleintContext } from '@/context/ClientContext'
+import ClientDropDawn from '@/components/dropdawn/ClientDropDawn'
 
 
 
 
-interface Client{
-    clientId:string,
-    maxCredit:number,
-    name:string
-} 
-const clients:Client[]=[
-  {
-    clientId:'1',
-    maxCredit:10000,
-    name:'tayeb'
-  },
-  {
-    clientId:'2',
-    maxCredit:20000,
-    name:'wlid'
-  }
-]
-export const columns: ColumnDef<Client>[] = [
+export const columns: ColumnDef<Models.Document | undefined>[] = [
     {
-      accessorKey: "clientId",
-      header: "ID",
+      accessorKey: "$id",
+      header: "إسم المستخدم",
+    },
+    {
+      accessorKey: "password",
+      header: "كلمة المرور",
     },
     {
       accessorKey: "name",
       header: "الإسم",
     },
     {
-      accessorKey: "maxCredit",
+      accessorKey: "maxcredit",
       header: "الحد الإقصى",
     },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const client = row.original
+   
+        return (
+        <ClientDropDawn client={client}/>
+        )
+      },
+    },
   ]
+export interface Client{
+    username:string;
+    passwoed:string;
+    name:string;
+    maxcredit:string;
+}
 const ClientPage = () => {
+  const [clients, setclients] = useState<Models.Document[] | undefined>([])
+  const [open, setOpen] = React.useState(false)
+   const [client, setClient] = useState<Client>({
+    username:"",
+    passwoed:"",
+    name:"",
+    maxcredit:""
+   })
+  const fetchClients=useCallback(async()=>{
+    try {
+      const data=await getAllClients()
+      setclients(data)
+     } catch (error) {
+      
+     }
+  },[])
+  useEffect(()=>{
+
+     fetchClients()
+  },[])
   return (
-    <div>
-        <DataTable columns={columns} data={clients} />
+    <CleintContext.Provider value={{fetchClients,open,setOpen,client,setClient}}>
+<div>
+        <ClientTable columns={columns} data={clients as any} />
     </div>
+    </CleintContext.Provider>
+    
   )
 }
 

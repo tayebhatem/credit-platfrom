@@ -1,8 +1,8 @@
 import React from 'react'
 
-const CreditPage = () => {
+const CreditPage = ({params}:{params:{id:string}}) => {
   return (
-    <div>CreditPage</div>
+    <div>{params.id}</div>
   )
 }
 

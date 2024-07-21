@@ -119,7 +119,7 @@ const SignUpPage = () => {
                 <Input
                  id="password"
                  type="password"
-                  
+                 placeholder="**********"
                  
                  {...field} />
               </FormControl>
@@ -141,7 +141,7 @@ const SignUpPage = () => {
                 <Input
                  id="password2"
                  type="password"
-                  
+                placeholder="**********"
                  
                  {...field} />
               </FormControl>
@@ -153,14 +153,14 @@ const SignUpPage = () => {
         
         
         <Button type="submit" className={`w-full ${isLoading && 'opacity-50'}`} disabled={isLoading}>
-          دخول
+          إنشاء حساب
         </Button>
         <GoogleAuth/>
       </div>
       <div className="mt-4 text-center text-sm">
        لديك حساب ؟
         <Link href="/sign-in" className="underline text-primary font-semibold">
-           تسجيل الدخول
+            الدخول
         </Link>
       </div>
     </CardContent>

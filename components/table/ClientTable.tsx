@@ -18,19 +18,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React from "react"
+import React, { useContext } from "react"
 import { Plus } from "lucide-react"
-interface DataTableProps<TData, TValue> {
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
+import ClientDialog from "../dialog/ClientDialog"
+import { CleintContext } from "@/context/ClientContext"
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function ClientTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+
+    
+    
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
       )
@@ -45,9 +52,10 @@ export function DataTable<TData, TValue>({
         columnFilters,
       },
   })
-
+const {open,setOpen}=useContext(CleintContext)
   return (
     <div>
+     
         <div className="flex flex-row gap-x-2 justify-between items-center">
         <div className="flex items-center py-4">
         <Input
@@ -59,12 +67,18 @@ export function DataTable<TData, TValue>({
           className="max-w-sm text-right "
         />
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
       <Button className="gap-x-2" size={'lg'}>
         <span className="hidden md:block">
         أضف زبون
         </span>
         <Plus/>
       </Button>
+            </DialogTrigger>
+            <ClientDialog  />
+      </Dialog>
+     
         </div>
         <div className="rounded-md border">
       <Table>
@@ -94,8 +108,14 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-base font-medium capitalize">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===2 && 'capitalize'}`}>
+                    {
+                         cell.column.getIndex()===3?
+                         flexRender(cell.column.columnDef.cell, cell.getContext())
+                         :
+                  flexRender(cell.column.columnDef.cell, cell.getContext())
+
+                    }
                   </TableCell>
                 ))}
               </TableRow>
