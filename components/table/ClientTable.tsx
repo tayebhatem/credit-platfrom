@@ -21,7 +21,7 @@ import {
 import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useContext, useRef, useTransition } from "react"
+import React, { useContext, useRef, useState, useTransition } from "react"
 import { Plus,Import } from "lucide-react"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import ClientDialog from "../dialog/ClientDialog"
@@ -39,7 +39,9 @@ export function ClientTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 const {fetchClients}=useContext(CleintContext)
+
 const [isLoading,uplaod]=useTransition()
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   uplaod(()=>{
     const files = event.target.files;
@@ -64,13 +66,14 @@ const [isLoading,uplaod]=useTransition()
                if(!item) return
 
                 const client:Client={
+                id:"",
                 username:item.client,
-                passwoed:item.motpass,
+                password:item.motpass,
                 name:item.nom,
                 maxcredit:item.max
                 }
               try {
-                await createClient(client.name,client.passwoed,client.name,parseFloat(client.maxcredit))
+                await createClient(client.username,client.password,client.name,parseFloat(client.maxcredit))
               } catch (error) {
                 
               }
@@ -103,7 +106,7 @@ const [isLoading,uplaod]=useTransition()
         columnFilters,
       },
   })
-const {open,setOpen}=useContext(CleintContext)
+const [open,setOpen]=useState(false)
   return (
     <div>
      
@@ -134,7 +137,21 @@ const {open,setOpen}=useContext(CleintContext)
         <Plus/>
       </Button>
             </DialogTrigger>
-            <ClientDialog  />
+            <ClientDialog 
+             open={open}
+             setOpen={setOpen}
+            title="إضافة زبون" 
+            description=" Make changes to your profile here. Click save when you're done."
+            type="CREATE"
+            client={{
+              id:"",
+              username:"",
+              password:"",
+              name:"",
+              maxcredit:"",
+              
+            }}
+             />
       </Dialog>
      </div>
     

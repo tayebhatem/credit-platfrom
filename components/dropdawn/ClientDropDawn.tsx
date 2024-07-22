@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Dialog } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import {Trash,UserPen,FileText,DollarSign} from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -15,13 +16,14 @@ import { CleintContext } from '@/context/ClientContext'
 import { Models } from 'appwrite'
 import { ConfirmDialog } from '../ConfirmDialog'
 import { deleteClient } from '@/actions/deleteClient'
+import ClientDialog from '../dialog/ClientDialog'
 const ClientDropDawn = ({client}:{client:Models.Document | undefined}) => {
   
     const router=useRouter();
    const pathname=usePathname();
-   const {open,setOpen,setClient,fetchClients}=useContext(CleintContext)
+   const {fetchClients}=useContext(CleintContext)
    const [openConfirm, setopenConfirm] = useState(false)
-
+const [open,setOpen]=useState(false)
    const onChange=async()=>{
          try {
         const id=client?.$id 
@@ -39,12 +41,7 @@ const ClientDropDawn = ({client}:{client:Models.Document | undefined}) => {
    const editClient=(client:Models.Document | undefined)=>{
     setOpen(true)
     
-    setClient({
-        username:client?.$id,
-        password:client?.password,
-        name:client?.name,
-        maxcredit:client?.maxcredit
-    })
+    
    }
     const dropdawn=[
         { 
@@ -96,6 +93,26 @@ const ClientDropDawn = ({client}:{client:Models.Document | undefined}) => {
      
     </DropdownMenuContent>
   </DropdownMenu>
+  <Dialog open={open} onOpenChange={setOpen}>
+  <ClientDialog 
+  title='تعديل زبون' 
+  description='' 
+  type='UPDATE'
+  open={open}
+  setOpen={setOpen}
+  client={
+    {
+       id:client?.$id as string,
+      username:client?.username,
+      password:client?.password,
+      name:client?.name,
+      maxcredit:client?.maxcredit as string
+
+    }
+  }
+   />
+  </Dialog>
+ 
   </>
   )
 }

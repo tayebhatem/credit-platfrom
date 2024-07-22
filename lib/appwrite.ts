@@ -1,5 +1,5 @@
 import { Avatar } from '@radix-ui/react-avatar';
-import { Client, Account, OAuthProvider, Avatars, Databases, ID } from 'appwrite';
+import { Client, Account, OAuthProvider, Avatars, Databases, ID, Query } from 'appwrite';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
@@ -87,3 +87,16 @@ export const updateUser=async(name:string,phone:string | undefined,adress:string
         
     }
     }
+export const getClient=async(username:string)=>{
+     try {
+      const client=  await database.listDocuments(
+            config.databaseId,
+            config.clientTable,
+            [
+            Query.equal('username',username)
+            ])
+        return client.documents[0]
+     } catch (error) {
+        
+     }
+}

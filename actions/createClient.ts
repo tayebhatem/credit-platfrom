@@ -1,14 +1,15 @@
-import { account, config, database } from "@/lib/appwrite"
+import { ID, account, config, database } from "@/lib/appwrite"
 
-export const createClient=async(clientId:string,password:string,name:string,maxcredit:number)=>{
+export const createClient=async(username:string,password:string,name:string,maxcredit:number)=>{
     const session=await account.getSession('current')
         const user=session.userId
         const client=await database.createDocument(
             config.databaseId,
             config.clientTable,
-            clientId,
+            ID.unique(),
             {
              user,
+             username,
              name,
              password,
              maxcredit

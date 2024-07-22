@@ -17,6 +17,10 @@ import ClientDropDawn from '@/components/dropdawn/ClientDropDawn'
 export const columns: ColumnDef<Models.Document | undefined>[] = [
     {
       accessorKey: "$id",
+      header: "ID",
+    },
+    {
+      accessorKey: "username",
       header: "إسم المستخدم",
     },
     {
@@ -35,7 +39,7 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
       id: "actions",
       cell: ({ row }) => {
         const client = row.original
-   
+       console.log(client)
         return (
         <ClientDropDawn client={client}/>
         )
@@ -43,8 +47,9 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
     },
   ]
 export interface Client{
+     id:string,
     username:string;
-    passwoed:string;
+    password:string;
     name:string;
     maxcredit:string;
 }
@@ -52,8 +57,9 @@ const ClientPage = () => {
   const [clients, setclients] = useState<Models.Document[] | undefined>([])
   const [open, setOpen] = React.useState(false)
    const [client, setClient] = useState<Client>({
+    id:"",
     username:"",
-    passwoed:"",
+    password:"",
     name:"",
     maxcredit:""
    })
