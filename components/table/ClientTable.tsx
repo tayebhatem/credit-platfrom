@@ -18,14 +18,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useContext } from "react"
-import { Plus } from "lucide-react"
+import React, { useContext, useRef, useTransition } from "react"
+import { Plus,Import } from "lucide-react"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import ClientDialog from "../dialog/ClientDialog"
 import { CleintContext } from "@/context/ClientContext"
+import ImportButton from "../ImportButton"
+import { createClient } from "@/actions/createClient";
+import { Client } from "@/app/dashboard/client/page";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -35,9 +38,57 @@ export function ClientTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+const {fetchClients}=useContext(CleintContext)
+const [isLoading,uplaod]=useTransition()
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  uplaod(()=>{
+    const files = event.target.files;
+  
+    if (files && files[0]) {
 
-    
-    
+      const file = files[0];
+        
+        try {
+          const reader = new FileReader();
+            
+          reader.onload = (e) => {
+              const data = new Uint8Array(e.target?.result as ArrayBuffer);
+              const workbook = XLSX.read(data, { type: 'array' });
+
+              const sheetName = workbook.SheetNames[0];
+              const worksheet = workbook.Sheets[sheetName];
+              const cleintData = XLSX.utils.sheet_to_json(worksheet);
+              
+            
+              cleintData.map(async(item)=>{
+               if(!item) return
+
+                const client:Client={
+                username:item.client,
+                passwoed:item.motpass,
+                name:item.nom,
+                maxcredit:item.max
+                }
+              try {
+                await createClient(client.name,client.passwoed,client.name,parseFloat(client.maxcredit))
+              } catch (error) {
+                
+              }
+              })
+
+              fetchClients()
+              // Handle the parsed data here
+          };
+
+          reader.readAsArrayBuffer(file);
+        } catch (error) {
+          console.log(error)
+        }
+        
+       
+    }
+  })
+};
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
       )
@@ -66,9 +117,16 @@ const {open,setOpen}=useContext(CleintContext)
           }
           className="max-w-sm text-right "
         />
+        
       </div>
+     <div className="space-x-4">
+    <ImportButton onChange={handleFileChange} title="إستراد الزبائن"/>
+    
+ 
       <Dialog open={open} onOpenChange={setOpen}>
+
       <DialogTrigger asChild>
+      
       <Button className="gap-x-2" size={'lg'}>
         <span className="hidden md:block">
         أضف زبون
@@ -78,7 +136,8 @@ const {open,setOpen}=useContext(CleintContext)
             </DialogTrigger>
             <ClientDialog  />
       </Dialog>
-     
+     </div>
+    
         </div>
         <div className="rounded-md border">
       <Table>
