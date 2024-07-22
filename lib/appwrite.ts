@@ -17,11 +17,12 @@ export { ID ,Avatars} from 'appwrite';
 export const config={
     databaseId:'669ab0560017d2c28837',
     userTableId:'669ab07b0034c7bb657d',
-    clientTable:'669ab14f0017d3177e7f'
+    clientTable:'669e97c900304106f83e'
 }
 export const getUser=async()=>{
 try {
-    const id=(await account.get()).$id
+    const session=await account.getSession('current')
+    const id=session.userId
     const user=await database.getDocument(config.databaseId,config.userTableId,id)
     return user
 } catch (error) {

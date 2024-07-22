@@ -10,8 +10,15 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Button } from "@/components/ui/button"
+import { useTransition } from "react"
   
   export function ConfirmDialog({onChange,open,onOpenChange}:{onChange:()=>void,open:boolean,onOpenChange:(open:boolean)=>void}) {
+    const [isLoading,submit]=useTransition()
+    const onSubmit=()=>{
+      submit(()=>{
+        onChange()
+      })
+    }
     return (
       <AlertDialog open={open}>
         <AlertDialogContent>
@@ -24,7 +31,7 @@ import {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={()=>onOpenChange(false)}>إلغاء</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/80" onClick={()=>onChange()}>تأكيد</AlertDialogAction>
+            <AlertDialogAction className={`bg-destructive text-white hover:bg-destructive/80 ${isLoading && 'opacity-50'}`} onClick={onSubmit} disabled={isLoading}>تأكيد</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

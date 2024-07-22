@@ -21,17 +21,19 @@ const ClientDropDawn = ({client}:{client:Models.Document | undefined}) => {
    const pathname=usePathname();
    const {open,setOpen,setClient,fetchClients}=useContext(CleintContext)
    const [openConfirm, setopenConfirm] = useState(false)
+
    const onChange=async()=>{
          try {
-         
+        const id=client?.$id 
+        if(!id) return
+      await deleteClient(id)
+      
+       fetchClients()
         
-        const id=client?.$id as string
-        await deleteClient(id)
-        fetchClients()
-         setopenConfirm(false)
-         
-         } catch (error) {
-            console.log(error)
+         } catch (error:any) {
+            console.log(error.message)
+         }finally{
+          setopenConfirm(false)
          }
    }
    const editClient=(client:Models.Document | undefined)=>{
