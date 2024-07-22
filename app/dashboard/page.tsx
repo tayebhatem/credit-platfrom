@@ -1,8 +1,25 @@
+'use client'
+import { getAllClients } from '@/actions/getAllClients'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building, Users, Users2, Users2Icon,Truck,CurrencyIcon,DollarSign } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const DashboardPage = () => {
+  const [clientsCount, setClientsCount] = useState<number>()
+  useEffect(() => {
+   const fetchCount=async()=>{
+        try {
+          const count=await getAllClients()
+        
+          setClientsCount(count?.length)
+        } catch (error) {
+          
+        }
+   }
+  fetchCount()
+    
+  }, [])
+  
   return (
     <div>
        <div className='grid  sm:grid-cols-2 lg:grid-cols-3 gap-4'>
@@ -16,7 +33,7 @@ const DashboardPage = () => {
               <Users2Icon className="h-10 w-10 " />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">25</div>
+              <div className="text-4xl font-bold">{clientsCount}</div>
              
             </CardContent>
           </Card>

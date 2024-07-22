@@ -18,14 +18,17 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
     {
       accessorKey: "$id",
       header: "ID",
+      enableHiding:true
     },
     {
       accessorKey: "username",
       header: "إسم المستخدم",
+      enableHiding:false
     },
     {
       accessorKey: "password",
       header: "كلمة المرور",
+      enableHiding:false
     },
     {
       accessorKey: "name",
@@ -34,6 +37,7 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
     {
       accessorKey: "maxcredit",
       header: "الحد الإقصى",
+      enableHiding:false
     },
     {
       id: "actions",

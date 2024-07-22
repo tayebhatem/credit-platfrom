@@ -158,12 +158,12 @@ const [open,setOpen]=useState(false)
         </div>
         <div className="rounded-md border">
       <Table>
-        <TableHeader>
+        <TableHeader > 
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} hidden={header.column.columnDef.enableHiding}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -182,9 +182,11 @@ const [open,setOpen]=useState(false)
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+               
+                
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===2 && 'capitalize'}`}>
+                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===2 && 'capitalize'}`} hidden={cell.column.columnDef.enableHiding}>
                     {
                          cell.column.getIndex()===3?
                          flexRender(cell.column.columnDef.cell, cell.getContext())
