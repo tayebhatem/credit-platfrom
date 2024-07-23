@@ -30,16 +30,20 @@ import ImportButton from "../ImportButton"
 import DatePicker from "../DatePicker";
 import CreditDialog from "../dialog/CreditDialog";
 import { CreditContext } from "@/context/CreditContext";
+import { createClientTransaction } from "@/actions/createClientTransactin";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
-
+export interface ClientTransaction{
+    username:string;
+    amount :string;
+}
 export function CreditTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-const {fetchClients}=useContext(CreditContext)
+const {fetchCredit}=useContext(CreditContext)
 
 const [isLoading,uplaod]=useTransition()
 
@@ -60,17 +64,30 @@ const [isLoading,uplaod]=useTransition()
 
               const sheetName = workbook.SheetNames[0];
               const worksheet = workbook.Sheets[sheetName];
-              const cleintData = XLSX.utils.sheet_to_json(worksheet);
+              const creditData = XLSX.utils.sheet_to_json(worksheet);
               
             
-              cleintData.map(async(item)=>{
+              creditData.map(async(item:any)=>{
                if(!item) return
+               
+               const transaction:ClientTransaction={
+                username:item.client,
+                amount:item.montant
+               }
+
+               try {
+                
+               await createClientTransaction(transaction,'credit')
+             
+               } catch (error) {
+                console.log(error)
+               }
 
               
               })
 
-              fetchClients()
-              // Handle the parsed data here
+              fetchCredit()
+            
           };
 
           reader.readAsArrayBuffer(file);
@@ -113,7 +130,7 @@ const [open,setOpen]=useState(false)
         
       </div>
       <DatePicker/>
-      <ImportButton onChange={handleFileChange} title="إستراد الزبائن"/>
+      <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>
       <Dialog open={open} onOpenChange={setOpen}>
 
 <DialogTrigger asChild>
@@ -131,13 +148,9 @@ const [open,setOpen]=useState(false)
       title="إضافة مبلغ" 
       description=" Make changes to your profile here. Click save when you're done."
       type="CREATE"
-      client={{
-        id:"",
+      transaction={{
         username:"",
-        password:"",
-        name:"",
-        maxcredit:"",
-        
+        amount:"",
       }}
        />
 </Dialog>

@@ -1,7 +1,7 @@
-import { Avatar } from '@radix-ui/react-avatar';
+
 import { Client, Account, OAuthProvider, Avatars, Databases, ID, Query } from 'appwrite';
 import { redirect } from 'next/navigation';
-import { NextResponse } from 'next/server';
+
 
 export const client = new Client();
 
@@ -18,7 +18,7 @@ export const config={
     databaseId:'669ab0560017d2c28837',
     userTableId:'669ab07b0034c7bb657d',
     clientTable:'669e97c900304106f83e',
-    clientTransaction:'669ab2330030b2c8c5d4'
+    clientTransaction:'669fc0be0002fd01ea12'
 }
 export const getUser=async()=>{
 try {
@@ -97,7 +97,10 @@ export const getClient=async(username:string)=>{
             Query.equal('username',username)
             ])
         return client.documents[0]
-     } catch (error) {
-        
+     } catch (error:unknown) {
+        if(error instanceof Error){
+            throw new Error(error.message)
+        }
+      
      }
 }

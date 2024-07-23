@@ -12,7 +12,8 @@ export const getTransaction=async(type:'credit'|'payment')=>{
             config.clientTransaction,
           [
             
-            Query.equal('type',type)
+            Query.equal('type',type),
+            Query.orderDesc('$createdAt')
           ]
         )
     if(!data) throw Error

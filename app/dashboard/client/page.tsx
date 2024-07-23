@@ -60,13 +60,7 @@ export interface Client{
 const ClientPage = () => {
   const [clients, setclients] = useState<Models.Document[] | undefined>([])
   const [open, setOpen] = React.useState(false)
-   const [client, setClient] = useState<Client>({
-    id:"",
-    username:"",
-    password:"",
-    name:"",
-    maxcredit:""
-   })
+   const [client, setClient] = useState<Client>()
   const fetchClients=useCallback(async()=>{
     try {
       const data=await getAllClients()

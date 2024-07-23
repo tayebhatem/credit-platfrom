@@ -62,7 +62,7 @@ const [isLoading,uplaod]=useTransition()
               const cleintData = XLSX.utils.sheet_to_json(worksheet);
               
             
-              cleintData.map(async(item)=>{
+              cleintData.map(async(item:any)=>{
                if(!item) return
 
                 const client:Client={
@@ -186,11 +186,9 @@ const [open,setOpen]=useState(false)
                 
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===2 && 'capitalize'}`} hidden={cell.column.columnDef.enableHiding}>
+                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===3 && 'capitalize'}`} hidden={cell.column.columnDef.enableHiding}>
                     {
-                         cell.column.getIndex()===3?
-                         flexRender(cell.column.columnDef.cell, cell.getContext())
-                         :
+                        
                   flexRender(cell.column.columnDef.cell, cell.getContext())
 
                     }

@@ -22,11 +22,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { ClientSchema } from '@/schemas'
 import { createClient } from '@/actions/createClient'
 import { CleintContext } from '@/context/ClientContext'
 import { Client } from '@/app/dashboard/client/page'
 import { updateClient } from '@/actions/updateClient'
+import { createClientTransaction } from '@/actions/createClientTransactin'
+import { CreditContext } from '@/context/CreditContext'
+import { ClientTransaction } from '../table/CreditTable'
+import { ClientTransactionSchema } from '@/schemas'
+
 
 
 const CreditDialog = (
@@ -36,63 +40,52 @@ const CreditDialog = (
   setOpen,
   description,
   type,
-  client
+  transaction
    }:{
     open:boolean,
     setOpen:(open:boolean)=>void
     title:string,
     description:string,
     type:'CREATE' | 'UPDATE',
-    client:Client
+    transaction:ClientTransaction
   }) => {
     const [isLoading,save]=useTransition()
     const [error, seterror] = useState("")
 
-   const {fetchClients}=useContext(CleintContext)
+    const {fetchCredit}=useContext(CreditContext)
 
-    const form = useForm<z.infer<typeof ClientSchema>>({
-        resolver: zodResolver(ClientSchema),
+    const form = useForm<z.infer<typeof ClientTransactionSchema>>({
+        resolver: zodResolver(ClientTransactionSchema),
         defaultValues: {
-          username: client?.username,
-          password:client?.password,
-          name:client?.name,
-          maxcredit:client?.maxcredit.toString()
+          username: transaction?.username,
+          amount:transaction?.amount
         },
       })
-    const onCreate=async(values: z.infer<typeof ClientSchema>)=>{
-      const {name,username,password,maxcredit}=values
+    const onCreate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
+      
       try {
-        const client= await createClient(username,password,name,parseFloat(maxcredit))
-         if(client){
-             setOpen(false)
-         }
-         fetchClients()
+      await createClientTransaction(values,'credit')
+       setOpen(false)
+         fetchCredit()
          
        form.reset()
        } catch (error:unknown) {
+        console.log(error)
          if (error instanceof Error) {
-             if(error.message.includes('Document with the requested ID already exists')){
-                 seterror('إسم المستخدم موجود مسبقا')
-             }else{
+             
               seterror(error.message)
-             }
+             
              
          }
        }
     }
 
-    const onUpdate=async(values: z.infer<typeof ClientSchema>)=>{
-    const {name,username,password,maxcredit}=values
+    const onUpdate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
+    const {username,amount}=values
       try {
-      const response=  await updateClient({
-          id:client.id,
-          username:username,
-          password:password,
-          name:name,
-          maxcredit:maxcredit
-        })
+      
         setOpen(false)
-        fetchClients()
+        fetchCredit()
          
        form.reset()
        } catch (error:unknown) {
@@ -101,7 +94,7 @@ const CreditDialog = (
          }
        }
     }
-      function onSubmit(values: z.infer<typeof ClientSchema>) {
+      function onSubmit(values: z.infer<typeof ClientTransactionSchema>) {
        save(async()=>{
       
         if(type==='CREATE'){
@@ -150,9 +143,9 @@ const CreditDialog = (
           )}
         />
         
-         <FormField
+        <FormField
           control={form.control}
-          name="maxcredit"
+          name="amount"
           render={({ field }) => (
             <FormItem>
               <FormLabel> المبلغ</FormLabel>
@@ -166,7 +159,7 @@ const CreditDialog = (
         />
         <p className='text-destructive text-center'>{error}</p>
            <DialogFooter>
-      <Button type="submit" className={`w-full mt-3 ${isLoading && 'opacity-50'}`} disabled={isLoading}>حفظ </Button>
+      <Button type="submit" className='w-full mt-3' disabled={isLoading}>حفظ </Button>
     </DialogFooter>
       </form>
     </Form>

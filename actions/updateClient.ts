@@ -3,16 +3,15 @@ import { account, config, database, getClient } from "@/lib/appwrite"
 import { Query } from "appwrite"
 
 export const updateClient=async(client:Client)=>{
-      
+     const {username,maxcredit,name,password}=client
        const session=await account.getSession('current')
       
        if(!session) throw Error
-       const clientUser=await getClient(client.username)
+       const clientUser=await getClient(username)
        if(clientUser?.$id!==client.id){
         throw new Error('إسم المستخدم محجوز')
        }
-       const {username,maxcredit,name,password}=client
-      const maxValue=parseFloat(maxcredit)
+       
        await database.updateDocument(
             config.databaseId,
             config.clientTable,
@@ -21,7 +20,7 @@ export const updateClient=async(client:Client)=>{
         username,
         name,
         password,
-        maxcredit:maxValue
+        maxcredit:parseFloat(maxcredit)
        }
         )
         

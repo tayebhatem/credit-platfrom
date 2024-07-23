@@ -66,7 +66,6 @@ const CreditPage = () => {
       const data=await getTransaction('credit')
       
     const transactions= data?.filter(item=>item.date===format(date,'yyyy-MM-dd'))
-      console.log(format(date,'yyyy-MM-dd'))
       setCredit(transactions)
      } catch (error) {
       console.log(error)

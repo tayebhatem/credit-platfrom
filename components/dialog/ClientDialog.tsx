@@ -49,23 +49,21 @@ const ClientDialog = (
     const [error, seterror] = useState("")
 
    const {fetchClients}=useContext(CleintContext)
-
+  const {username,password,name,maxcredit}=client
     const form = useForm<z.infer<typeof ClientSchema>>({
         resolver: zodResolver(ClientSchema),
         defaultValues: {
-          username: client?.username,
-          password:client?.password,
-          name:client?.name,
-          maxcredit:client?.maxcredit.toString()
+          username: username,
+          password:password,
+          name:name,
+          maxcredit:maxcredit.toString()
         },
       })
     const onCreate=async(values: z.infer<typeof ClientSchema>)=>{
       const {name,username,password,maxcredit}=values
       try {
-        const client= await createClient(username,password,name,parseFloat(maxcredit))
-         if(client){
-             setOpen(false)
-         }
+         await createClient(username,password,name,parseFloat(maxcredit))
+        setOpen(false)
          fetchClients()
          
        form.reset()
@@ -84,7 +82,7 @@ const ClientDialog = (
     const onUpdate=async(values: z.infer<typeof ClientSchema>)=>{
     const {name,username,password,maxcredit}=values
       try {
-      const response=  await updateClient({
+       await updateClient({
           id:client.id,
           username:username,
           password:password,
@@ -116,7 +114,6 @@ const ClientDialog = (
     useEffect(()=>{
  
     if(!open){
-     
           form.reset()
           seterror("")
     }

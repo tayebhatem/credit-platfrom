@@ -1,20 +1,24 @@
+'use server'
+import { ClientTransaction } from "@/components/table/CreditTable"
 import { ID, account, config, database, getClient } from "@/lib/appwrite"
 
-export const createClient=async(username:string,amount:number)=>{
-    const session=await account.getSession('current')
-    if(!session) throw Error
+export const createClientTransaction=async(clientTransaction:ClientTransaction,type:'credit'|'payment')=>{
+    const {username,amount}=clientTransaction
     const client=await getClient(username)
-        if(client?.$id) return
-        const id=client?.$id
+
+       // if(!client) throw new Error('إسم المستخدم غير موجود')
+        if(!client) return 
         const transaction=await database.createDocument(
             config.databaseId,
             config.clientTransaction,
             ID.unique(),
             {
-              client:id ,
-              amount:amount
+              client:client.$id ,
+              amount:parseFloat(amount),
+              type:type
             }
         )
-  
+    
     return transaction
+    
 }
