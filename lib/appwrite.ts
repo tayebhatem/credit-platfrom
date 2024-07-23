@@ -17,7 +17,8 @@ export { ID ,Avatars} from 'appwrite';
 export const config={
     databaseId:'669ab0560017d2c28837',
     userTableId:'669ab07b0034c7bb657d',
-    clientTable:'669e97c900304106f83e'
+    clientTable:'669e97c900304106f83e',
+    clientTransaction:'669ab2330030b2c8c5d4'
 }
 export const getUser=async()=>{
 try {

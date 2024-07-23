@@ -15,7 +15,10 @@ import {
     User,
     Users,
     Truck,
-    LogOut
+    LogOut,
+    List,
+    FileText,
+    
     
   } from "lucide-react"
 import Logo from '../Logo'
@@ -34,6 +37,12 @@ import { logout } from '@/lib/appwrite'
       name:'حسابي',
       path:'/dashboard/account',
       icon: <User   />,
+  
+    },
+    { 
+      name:'الإئتمان',
+      path:'/dashboard/credit',
+      icon: <FileText />,
   
     },
     { 

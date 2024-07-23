@@ -1,4 +1,4 @@
 import { createContext } from "react";
 
 
- export const CleintContext=createContext({})
+ export const CleintContext=createContext<any>({})
