@@ -1,25 +1,21 @@
 'use client'
-import React, { createContext, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     ColumnDef,
 
   } from "@tanstack/react-table"
 
-import { ClientTable } from '@/components/table/ClientTable'
-import { Models } from 'appwrite'
-import { getAllClients } from '@/actions/getAllClients'
-import { CleintContext } from '@/context/ClientContext'
-import ClientDropDawn from '@/components/dropdawn/ClientDropDawn'
 import { CreditTable } from '@/components/table/CreditTable'
 
 import { CreditContext } from '@/context/CreditContext'
 import { getTransaction } from '@/actions/getTransaction'
 import { format } from 'date-fns'
+import TransactionDropDawn from '@/components/dropdawn/TransactionDropDawn'
 
 
 
 
-export const columns: ColumnDef<Models.Document | undefined>[] = [
+export const columns: ColumnDef<Transaction>[] = [
     {
       accessorKey: "id",
       header: "ID",
@@ -50,12 +46,22 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
         header: "الوقت",
         enableHiding:false
       },
+      {
+      id: "actions",
+      cell: ({ row }) => {
+        const transaction = row.original
+     
+        return (
+        <TransactionDropDawn transaction={transaction} />
+        )
+      },
+    }
   ]
-export interface Credit{
+export interface Transaction{
     id:string,
     username:string,
     name:string,
-    amount:number,
+    amount:string,
     date:Date
 }
 const CreditPage = () => {

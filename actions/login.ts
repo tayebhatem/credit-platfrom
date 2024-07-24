@@ -1,24 +1,25 @@
-import { account, getUser } from "@/lib/appwrite";
+import { account, createUser, isUserVerified } from "@/lib/appwrite";
 import { redirect } from "next/navigation";
 
 
 export const login = async (email:string, password:string) => {
  try {
-    const session = await account.createEmailPasswordSession(email, password);
+   const session=await account.createEmailPasswordSession(email, password);
+    if(!session) throw Error('Session error')
     
-    if(!session) throw Error
+    await createUser()
+    
+    const verfied=await isUserVerified()
 
-     const user=await getUser();
+   if(!verfied) account.deleteSession('current')
 
-     if(user?.emailVerification===false){
-      const promise=await account.createVerification('http://localhost:3000/sign-in');
-      if(promise) account.deleteSession('current')
-      return {message:'verify your account'}
-     }
-
-  return {message:'success'}
- } catch (error:any) {
-   return {message:error.message}
+  return verfied
+ } catch (error:unknown) {
+  if(error instanceof Error){
+    throw new Error(error.message)
+  }
+ 
+ 
  }
   };
 

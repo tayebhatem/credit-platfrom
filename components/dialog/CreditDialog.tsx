@@ -22,14 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { createClient } from '@/actions/createClient'
-import { CleintContext } from '@/context/ClientContext'
-import { Client } from '@/app/dashboard/client/page'
-import { updateClient } from '@/actions/updateClient'
 import { createClientTransaction } from '@/actions/createClientTransactin'
 import { CreditContext } from '@/context/CreditContext'
-import { ClientTransaction } from '../table/CreditTable'
 import { ClientTransactionSchema } from '@/schemas'
+import { Transaction } from '@/app/dashboard/credit/page'
 
 
 
@@ -47,7 +43,7 @@ const CreditDialog = (
     title:string,
     description:string,
     type:'CREATE' | 'UPDATE',
-    transaction:ClientTransaction
+    transaction:Transaction
   }) => {
     const [isLoading,save]=useTransition()
     const [error, seterror] = useState("")
@@ -64,9 +60,12 @@ const CreditDialog = (
     const onCreate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
       
       try {
-      await createClientTransaction(values,'credit')
-       setOpen(false)
-         fetchCredit()
+      const transaction=await createClientTransaction(values,'credit')
+       if(transaction){
+        fetchCredit()
+        setOpen(false)
+       }
+        
          
        form.reset()
        } catch (error:unknown) {

@@ -19,6 +19,7 @@ import { register } from "@/actions/register"
 import { account } from "@/lib/appwrite"
 import { useEffect, useTransition } from "react"
 import GoogleAuth from "@/components/auth/GoogleAuth"
+import { toast } from "sonner"
 const SignUpPage = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const secret = urlParams.get('secret');
@@ -47,11 +48,26 @@ const SignUpPage = () => {
    signUp(async()=>{
     const {email,name,password}=values
     try {
-    await register(email,name,password)
-   
-    } catch (error) {
-      console.log(error)
-    }
+  await register(email,name,password)
+  toast.success(
+    'نجاح',
+{
+  description:`${email} تم إرسال بريد التحقق إلى `
+}
+    
+   )
+    } catch (error:unknown) {
+      if(error instanceof Error){
+       
+        toast.error(
+          'خطأ',{
+            description:error.message
+          }
+        )
+      }
+    
+     }
+    
    })
   }
   return (

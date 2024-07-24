@@ -3,12 +3,15 @@ import { ReactNode } from "react"
 import SessionProvider from "@/providers/SessionProvider"
 import DashbaordHeader from "@/components/dashboard/DashbaordHeader"
 import Sidebar from "@/components/dashboard/Sidebar"
+import ProgressProvider from "@/providers/ProgressProvider"
 
 const DashboardLayout = ({children}:{children:ReactNode}) => {
  
  
   return (
    <SessionProvider>
+  <ProgressProvider>
+   
      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
      <Sidebar/>
       <div className="flex flex-col">
@@ -30,6 +33,7 @@ const DashboardLayout = ({children}:{children:ReactNode}) => {
         </main>
       </div>
     </div>
+    </ProgressProvider>
    </SessionProvider>
   )
 }

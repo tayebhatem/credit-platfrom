@@ -6,7 +6,7 @@ export const createClientTransaction=async(clientTransaction:ClientTransaction,t
     const {username,amount}=clientTransaction
     const client=await getClient(username)
 
-       // if(!client) throw new Error('إسم المستخدم غير موجود')
+        if(!client) throw new Error('إسم المستخدم غير موجود')
         if(!client) return 
         const transaction=await database.createDocument(
             config.databaseId,

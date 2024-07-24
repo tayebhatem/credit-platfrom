@@ -29,6 +29,10 @@ import { CleintContext } from "@/context/ClientContext"
 import ImportButton from "../ImportButton"
 import { createClient } from "@/actions/createClient";
 import { Client } from "@/app/dashboard/client/page";
+import { toast } from "sonner";
+import { ProgressBar } from "../ProgressBar";
+import { ProgressContext } from "@/providers/ProgressProvider";
+
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -39,7 +43,7 @@ export function ClientTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 const {fetchClients}=useContext(CleintContext)
-
+const {setShowProgress}=useContext(ProgressContext)
 const [isLoading,uplaod]=useTransition()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,10 +63,10 @@ const [isLoading,uplaod]=useTransition()
 
               const sheetName = workbook.SheetNames[0];
               const worksheet = workbook.Sheets[sheetName];
-              const cleintData = XLSX.utils.sheet_to_json(worksheet);
+              const clientData = XLSX.utils.sheet_to_json(worksheet);
               
-            
-              cleintData.map(async(item:any)=>{
+              setShowProgress(true)
+              clientData.map(async(item:any)=>{
                if(!item) return
 
                 const client:Client={
@@ -78,14 +82,26 @@ const [isLoading,uplaod]=useTransition()
                 
               }
               })
-
-              fetchClients()
-              // Handle the parsed data here
+          
+              
           };
 
           reader.readAsArrayBuffer(file);
+          
+          
+          fetchClients()
+          setShowProgress(false)
+          toast.success(
+            'نجاح',
+    {
+          description:'تم إضاقة الزبائن'
+    }
+            
+           )
         } catch (error) {
           console.log(error)
+        }finally{
+         
         }
         
        
@@ -109,7 +125,6 @@ const [isLoading,uplaod]=useTransition()
 const [open,setOpen]=useState(false)
   return (
     <div>
-     
         <div className="flex flex-row gap-x-2 justify-between items-center">
         <div className="flex items-center py-4">
         <Input

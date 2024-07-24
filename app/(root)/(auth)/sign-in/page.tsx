@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { account } from "@/lib/appwrite"
 import GoogleAuth from "@/components/auth/GoogleAuth"
+import { toast } from "sonner"
 const SignInPage = () => {
 const router=useRouter()
 const [isLoading,signIn]=useTransition()
@@ -43,14 +44,28 @@ const userId = urlParams.get('userId');
      try {
       const response=await login(email,password);
       
-      if(response.message==='success'){
+      if(response){
         router.push('../../../dashboard')
       }else{
-       console.log(response.message)
+       toast.success(
+        'نجاح',
+{
+      description:`${email} تم إرسال بريد التحقق إلى `
+}
+        
+       )
       }
       
-     } catch (error) {
-      console.log(error)
+     } catch (error:unknown) {
+      if(error instanceof Error){
+        console.log(error.message)
+        toast.error(
+          'خطأ',{
+            description:error.message,
+          }
+        )
+      }
+    
      }
     })
   }
@@ -59,9 +74,23 @@ const userId = urlParams.get('userId');
     if(userId && secret) {
       const promise = account.updateVerification(userId, secret);
       promise.then(function (response) {
+        toast.success(
+          'نجاح',
+          {
+            description:'تم تفعيل الحساب بنجاح'
+          }
+        )
         console.log(response);
-    }, function (error) {
-        console.log(error);
+    }, function (error:unknown) {
+      if(error instanceof Error){
+        toast.error(
+          'خطأ',
+          {
+            description:error.message
+          }
+        )
+      }
+       
     });
     }
    } catch (error) {

@@ -15,10 +15,10 @@ export { ID ,Avatars} from 'appwrite';
 
 
 export const config={
-    databaseId:'669ab0560017d2c28837',
-    userTableId:'669ab07b0034c7bb657d',
-    clientTable:'669e97c900304106f83e',
-    clientTransaction:'669fc0be0002fd01ea12'
+    databaseId:'66a02c2c0037f2813b8f',
+    userTableId:'66a02c88001a68ba36c0',
+    clientTable:'66a02d260003e362834e',
+    clientTransaction:'66a02dc9002e06922fdf'
 }
 export const getUser=async()=>{
 try {
@@ -30,6 +30,7 @@ try {
     
 }
 }
+
 export const avatar=new Avatars(client)
 export const googleAuth=async()=>{
     try {
@@ -43,20 +44,27 @@ export const googleAuth=async()=>{
     }
     }
 
-export const createUser=async(id:string,name:string,phone:string,adress:string)=>{
+export const createUser=async()=>{
     try {
-        const user=await database.createDocument(
+        const accountUser=await account.get();
+        if(!accountUser) throw new Error('User does not exists')
+        const {$id,name}=accountUser
+    const user=await getUser()
+    if(!user){
+        await database.createDocument(
             config.databaseId,
             config.userTableId,
-            id,
+            $id,
             {
-                name,
-                phone,
-                adress
+                name:name,
+                phone:"",
+                adress:""
             }
             )
-        if(!user) throw Error
-        return user
+    }
+       
+        
+    
     } catch (error) {
         console.log(error)
     }
@@ -96,6 +104,7 @@ export const getClient=async(username:string)=>{
             [
             Query.equal('username',username)
             ])
+    
         return client.documents[0]
      } catch (error:unknown) {
         if(error instanceof Error){
@@ -103,4 +112,16 @@ export const getClient=async(username:string)=>{
         }
       
      }
+}
+export const isUserVerified=async()=>{
+    const user=await account.get()
+    const verfied=user.emailVerification
+    if(verfied===false){
+        await account.createVerification('http://localhost:3000/sign-in');
+       }
+
+    return verfied
+}
+export const verifyAccount=async()=>{
+
 }

@@ -31,6 +31,7 @@ import DatePicker from "../DatePicker";
 import CreditDialog from "../dialog/CreditDialog";
 import { CreditContext } from "@/context/CreditContext";
 import { createClientTransaction } from "@/actions/createClientTransactin";
+import { ProgressBar } from "../ProgressBar";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -91,6 +92,8 @@ const [isLoading,uplaod]=useTransition()
           };
 
           reader.readAsArrayBuffer(file);
+    
+
         } catch (error) {
           console.log(error)
         }
@@ -116,7 +119,7 @@ const [isLoading,uplaod]=useTransition()
 const [open,setOpen]=useState(false)
   return (
     <div>
-     
+   
         <div className="flex flex-row gap-x-2 justify-between items-center">
         <div className="flex items-center py-4">
         <Input
@@ -149,6 +152,9 @@ const [open,setOpen]=useState(false)
       description=" Make changes to your profile here. Click save when you're done."
       type="CREATE"
       transaction={{
+        date:new Date(),
+        id:"",
+        name:"",
         username:"",
         amount:"",
       }}

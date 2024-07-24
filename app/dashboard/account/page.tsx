@@ -21,6 +21,7 @@ import { z } from "zod"
 import { useUser } from "@/hooks/useUser"
 import { Textarea } from "@/components/ui/textarea"
 import { updateUser } from "@/lib/appwrite"
+import { toast } from "sonner"
 const AccountPage = () => {
   const {user,loading}=useUser();
   const [isLoading,update]=useTransition()
@@ -38,6 +39,13 @@ const AccountPage = () => {
     const {name,phone,adress}=values
       try {
         await updateUser(name,phone,adress)
+        toast.success(
+          'نجاح',
+      {
+        description:'تم تحديث الحساب بنجاح'
+      }
+          
+         )
       } catch (error) {
         console.log(error)
       }

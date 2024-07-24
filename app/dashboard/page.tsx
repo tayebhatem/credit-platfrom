@@ -33,7 +33,9 @@ const DashboardPage = () => {
               <Users2Icon className="h-10 w-10 " />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">{clientsCount}</div>
+              <div className="text-4xl font-bold">{
+                clientsCount? clientsCount:0
+              }</div>
              
             </CardContent>
           </Card>
