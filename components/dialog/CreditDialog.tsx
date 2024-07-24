@@ -5,7 +5,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-
+Dialog
 } from "@/components/ui/dialog"
  
 import { useForm } from "react-hook-form"
@@ -119,6 +119,9 @@ const CreditDialog = (
     }
     },[open])
   return (
+    <Dialog open={open} onOpenChange={setOpen}>
+
+   
     <DialogContent className="sm:max-w-[425px]" >
     <DialogHeader>
       <DialogTitle>
@@ -171,6 +174,7 @@ const CreditDialog = (
     </Form>
 
   </DialogContent>
+  </Dialog>
   )
 }
 

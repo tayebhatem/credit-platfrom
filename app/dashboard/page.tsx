@@ -23,7 +23,7 @@ const DashboardPage = () => {
       const data=await getTransaction('credit')
       let total=0;
       data?.map((item)=>{
-       total= item.amount+total
+       total= (parseFloat(item.amount)+total)
       })
       setTotalCredit(total)
      } catch (error) {
@@ -82,6 +82,7 @@ const DashboardPage = () => {
               {
                 totalCredit? totalCredit:0
               }
+              .00 DA
               </div>
              
             </CardContent>

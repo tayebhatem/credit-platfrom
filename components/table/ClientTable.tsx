@@ -125,52 +125,54 @@ const [isLoading,uplaod]=useTransition()
 const [open,setOpen]=useState(false)
   return (
     <div>
-        <div className="flex flex-row gap-x-2 justify-between items-center">
-        <div className="flex items-center py-4">
+        <ClientDialog 
+       open={open}
+       setOpen={setOpen}
+      title="إضافة زبون" 
+      description=" Make changes to your profile here. Click save when you're done."
+      type="CREATE"
+      client={{
+        id:"",
+        username:"",
+        password:"",
+        name:"",
+        maxcredit:"",
+        
+      }}
+       />
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-between items-center my-4">
+
+     
         <Input
           placeholder="...إبحث عن زبون"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm text-right "
+          className="col-span-2 md:max-w-sm text-right order-last md:order-first"
         />
         
-      </div>
-     <div className="space-x-4">
+          
     <ImportButton onChange={handleFileChange} title="إستراد الزبائن"/>
-    
- 
-      <Dialog open={open} onOpenChange={setOpen}>
 
-      <DialogTrigger asChild>
-      
-      <Button className="gap-x-2" size={'lg'}>
-        <span className="hidden md:block">
-        أضف زبون
-        </span>
-        <Plus/>
-      </Button>
-            </DialogTrigger>
-            <ClientDialog 
-             open={open}
-             setOpen={setOpen}
-            title="إضافة زبون" 
-            description=" Make changes to your profile here. Click save when you're done."
-            type="CREATE"
-            client={{
-              id:"",
-              username:"",
-              password:"",
-              name:"",
-              maxcredit:"",
-              
-            }}
-             />
-      </Dialog>
-     </div>
+    <Button className="gap-x-2" size={'lg'} onClick={()=>setOpen(true)}>
+  <span className="">
+  أضف زبون
+  </span>
+  <Plus/>
+</Button>
+
+ 
+    
+
+
+    
+
     
         </div>
+
+
         <div className="rounded-md border">
       <Table>
         <TableHeader > 

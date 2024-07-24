@@ -25,7 +25,7 @@ export const getTransaction=async(type:'credit'|'payment')=>{
         id:item.$id,
         username:item.client.username,
         name:item.client.name,
-        amount:item.amount as number,
+        amount:(item.amount as number).toFixed(2),
         date:dateString,
         time:timeString
        }

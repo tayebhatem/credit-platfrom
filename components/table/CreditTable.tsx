@@ -119,36 +119,7 @@ const [isLoading,uplaod]=useTransition()
 const [open,setOpen]=useState(false)
   return (
     <div className="w-full">
-   
-        <div className="grid grid-cols-2 md:grid-cols-6  gap-2 justify-between items-center flex-wrap my-4">
-        <Input
-          placeholder="...إبحث عن زبون"
-          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("username")?.setFilterValue(event.target.value)
-          }
-          className="text-right md:max-w-sm md:col-span-3"
-        />
-        
-      
-     
-    <div className="">
-    <DatePicker/>
-    </div>
-      <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-
-<DialogTrigger asChild>
-
-<Button className="gap-x-2" size={'lg'}>
-  <span className="">
-  أضف مبلغ
-  </span>
-  <Plus/>
-</Button>
-      </DialogTrigger>
-      <CreditDialog 
+       <CreditDialog 
        open={open}
        setOpen={setOpen}
       title="إضافة مبلغ" 
@@ -162,7 +133,37 @@ const [open,setOpen]=useState(false)
         amount:"",
       }}
        />
-</Dialog>
+        <div className="grid grid-cols-2 md:grid-cols-6  gap-4 justify-between items-center  my-4">
+        <Input
+          placeholder="...إبحث عن زبون"
+          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("username")?.setFilterValue(event.target.value)
+          }
+          className="text-right md:max-w-sm col-span-2 md:col-span-3 order-3 md:order-first "
+        />
+        
+      
+     
+    <div className="order-last md:order-2 col-span-2 md:col-span-1">
+    <DatePicker/>
+    </div>
+    <div className="md:order-3">
+    <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>
+
+    </div>
+    
+    
+
+<Button className="gap-x-2 md:order-last" size={'lg'} onClick={()=>setOpen(true)}>
+  <span className="">
+  أضف مبلغ
+  </span>
+  <Plus/>
+</Button>
+    
+  
+
     
     
         </div>
@@ -205,6 +206,7 @@ const [open,setOpen]=useState(false)
                   flexRender(cell.column.columnDef.cell, cell.getContext())
 
                     }
+                    { cell.column.getIndex()===3 && ' DA' }
                   </TableCell>
                 ))}
               </TableRow>
