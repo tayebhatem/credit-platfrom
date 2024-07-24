@@ -84,9 +84,9 @@ const CreditPage = () => {
   },[date])
   return (
     <CreditContext.Provider value={{fetchCredit,date,setDate}}>
-<div>
+
         <CreditTable columns={columns} data={credit as any} />
-    </div>
+    
     </CreditContext.Provider>
     
   )

@@ -17,6 +17,7 @@ import CreditDialog from '../dialog/CreditDialog'
 
 import { Transaction } from '@/app/dashboard/credit/page'
 import { deleteTransaction } from '@/actions/deleteTransaction'
+import { updateTransaction } from '@/actions/updateTransaction'
 const TransactionDropDawn = ({transaction}:{transaction:Transaction}) => {
   
    const {fetchCredit}=useContext(CreditContext)
@@ -41,10 +42,8 @@ const [open,setOpen]=useState(false)
          }
    }
 
-   const editClient=()=>{
-    setOpen(true)
-    
-    
+   const editClient=async(open:boolean)=>{
+    setOpen(open)
    }
 
     const dropdawn=[
@@ -52,7 +51,7 @@ const [open,setOpen]=useState(false)
        { 
         name:'تعديل',
         icon:<UserPen/>,
-        action:()=>{editClient}
+        action:()=>{editClient(true)}
       },
       { 
         name:'حذف',

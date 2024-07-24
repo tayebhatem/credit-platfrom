@@ -12,9 +12,10 @@ const DashboardLayout = ({children}:{children:ReactNode}) => {
    <SessionProvider>
   <ProgressProvider>
    
-     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+     <div className="grid min-h-screen w-full   md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
      <Sidebar/>
-      <div className="flex flex-col">
+
+      <div className="flex flex-col overflow-hidden">
        <DashbaordHeader/>
        
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
@@ -24,7 +25,7 @@ const DashboardLayout = ({children}:{children:ReactNode}) => {
           <div
             className="flex flex-1 items-center justify-center " x-chunk="dashboard-02-chunk-1"
           >
-            <div className="w-full h-full">
+            <div className="size-full ">
              {
                  children
              }

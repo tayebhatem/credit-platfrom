@@ -118,28 +118,31 @@ const [isLoading,uplaod]=useTransition()
   })
 const [open,setOpen]=useState(false)
   return (
-    <div>
+    <div className="w-full">
    
-        <div className="flex flex-row gap-x-2 justify-between items-center">
-        <div className="flex items-center py-4">
+        <div className="grid grid-cols-2 md:grid-cols-6  gap-2 justify-between items-center flex-wrap my-4">
         <Input
           placeholder="...إبحث عن زبون"
           value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("username")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm text-right "
+          className="text-right md:max-w-sm md:col-span-3"
         />
         
-      </div>
-      <DatePicker/>
+      
+     
+    <div className="">
+    <DatePicker/>
+    </div>
       <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>
+
       <Dialog open={open} onOpenChange={setOpen}>
 
 <DialogTrigger asChild>
 
 <Button className="gap-x-2" size={'lg'}>
-  <span className="hidden md:block">
+  <span className="">
   أضف مبلغ
   </span>
   <Plus/>
@@ -160,16 +163,12 @@ const [open,setOpen]=useState(false)
       }}
        />
 </Dialog>
-     <div className="space-x-4">
-   
     
- 
-      
-     </div>
     
         </div>
+        
         <div className="rounded-md border">
-      <Table>
+      <Table >
         <TableHeader > 
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

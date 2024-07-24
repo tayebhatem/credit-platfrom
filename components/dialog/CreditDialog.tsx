@@ -26,6 +26,7 @@ import { createClientTransaction } from '@/actions/createClientTransactin'
 import { CreditContext } from '@/context/CreditContext'
 import { ClientTransactionSchema } from '@/schemas'
 import { Transaction } from '@/app/dashboard/credit/page'
+import { updateTransaction } from '@/actions/updateTransaction'
 
 
 
@@ -80,13 +81,17 @@ const CreditDialog = (
     }
 
     const onUpdate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
-    const {username,amount}=values
+    const {amount}=values
       try {
-      
+        const id=transaction.id
+        const data=await updateTransaction(id,parseFloat(amount))
+
+       if(data){
         setOpen(false)
         fetchCredit()
          
        form.reset()
+       }
        } catch (error:unknown) {
          if (error instanceof Error) {
           seterror(error.message)
@@ -127,7 +132,8 @@ const CreditDialog = (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
        
-         <FormField
+        {
+          type==='CREATE' &&  <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
@@ -142,6 +148,7 @@ const CreditDialog = (
           )}
         />
         
+        }
         <FormField
           control={form.control}
           name="amount"
