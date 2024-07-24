@@ -1,11 +1,13 @@
 'use client'
 import { getAllClients } from '@/actions/getAllClients'
+import { getTransaction } from '@/actions/getTransaction'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building, Users, Users2, Users2Icon,Truck,CurrencyIcon,DollarSign } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 const DashboardPage = () => {
   const [clientsCount, setClientsCount] = useState<number>()
+  const [totalCredit, setTotalCredit] = useState<number>()
   useEffect(() => {
    const fetchCount=async()=>{
         try {
@@ -16,6 +18,19 @@ const DashboardPage = () => {
           
         }
    }
+   const fetchCredit=async()=>{
+    try {
+      const data=await getTransaction('credit')
+      let total=0;
+      data?.map((item)=>{
+       total= item.amount+total
+      })
+      setTotalCredit(total)
+     } catch (error) {
+      console.log(error)
+     }
+   }
+   fetchCredit()
   fetchCount()
     
   }, [])
@@ -33,9 +48,11 @@ const DashboardPage = () => {
               <Users2Icon className="h-10 w-10 " />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">{
+              <div className="text-4xl font-bold">
+                {
                 clientsCount? clientsCount:0
-              }</div>
+              }
+              </div>
              
             </CardContent>
           </Card>
@@ -61,7 +78,11 @@ const DashboardPage = () => {
               <DollarSign className="h-10 w-10 " />
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold">25</div>
+              <div className="text-4xl font-bold">
+              {
+                totalCredit? totalCredit:0
+              }
+              </div>
              
             </CardContent>
           </Card>
