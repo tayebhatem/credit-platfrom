@@ -81,6 +81,10 @@ import { logout } from '@/lib/appwrite'
 const Sidebar = () => {
     const router=useRouter()
     const pathname=usePathname()
+    const isClientDashboardPath = (path: string): boolean => {
+      const regex = /^\/dashboard\/client(\/.*)?$/;
+      return regex.test(path);
+    };
     const logOut=async()=>{
         try {
          await logout()
@@ -104,7 +108,7 @@ const Sidebar = () => {
          navbar.map((item)=>(
            <Link
            href={item.path}
-           className={`flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer   transition-all hover:text-primary ${pathname===item.path?'bg-muted text-primary':'text-muted-foreground'}`}
+           className={`flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer   transition-all hover:text-primary ${pathname===item.path || (item.path === '/dashboard/client' && isClientDashboardPath(pathname)) ?'bg-muted text-primary':'text-muted-foreground'}`}
          >
            {
              item.icon
