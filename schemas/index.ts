@@ -118,3 +118,12 @@ export const ClientTransactionSchema=z.object(
 
     }
 )
+
+export const TransactionSchema=z.object(
+    {
+        amount:z.string().min(1,{
+            message:'الحد الأقصى مطلوب'
+        })
+
+    }
+)

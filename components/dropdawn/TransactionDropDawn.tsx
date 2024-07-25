@@ -86,6 +86,7 @@ const [open,setOpen]=useState(false)
      
     </DropdownMenuContent>
   </DropdownMenu>
+  
   <Dialog open={open} onOpenChange={setOpen}>
   <CreditDialog 
   title='تعديل إئتمان' 
