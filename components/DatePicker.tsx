@@ -13,8 +13,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { CreditContext } from "@/context/CreditContext"
-const DatePicker = () => {
-  const {date,setDate}=React.useContext(CreditContext)
+const DatePicker = ({date,setDate}:{date:Date,setDate:(date:Date)=>void}) => {
+
   return (
     <Popover>
     <PopoverTrigger asChild>

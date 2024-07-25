@@ -45,7 +45,7 @@ export function CreditTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 const {fetchCredit}=useContext(CreditContext)
-
+const {date,setDate}=React.useContext(CreditContext)
 const [isLoading,uplaod]=useTransition()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,7 +146,7 @@ const [open,setOpen]=useState(false)
       
      
     <div className="order-last md:order-2 col-span-2 md:col-span-1">
-    <DatePicker/>
+    <DatePicker date={date} setDate={setDate}/>
     </div>
     <div className="md:order-3">
     <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>

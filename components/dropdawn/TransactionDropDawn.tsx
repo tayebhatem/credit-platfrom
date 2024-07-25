@@ -17,7 +17,6 @@ import CreditDialog from '../dialog/CreditDialog'
 
 import { Transaction } from '@/app/dashboard/credit/page'
 import { deleteTransaction } from '@/actions/deleteTransaction'
-import { updateTransaction } from '@/actions/updateTransaction'
 const TransactionDropDawn = ({transaction}:{transaction:Transaction}) => {
   
    const {fetchCredit}=useContext(CreditContext)

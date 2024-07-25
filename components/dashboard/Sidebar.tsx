@@ -18,6 +18,7 @@ import {
     LogOut,
     List,
     FileText,
+    Clock,
     
     
   } from "lucide-react"
@@ -51,10 +52,17 @@ import { logout } from '@/lib/appwrite'
       icon: <Users />,
   
     },
+   
     { 
       name:'الموردين',
       path:'/dashboard/supplier',
       icon: <Truck   />,
+  
+    },
+    { 
+      name:'التأخر',
+      path:'/dashboard/delay',
+      icon: <Clock />,
   
     },
     { 

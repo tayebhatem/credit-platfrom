@@ -46,6 +46,7 @@ const ClientDialog = (
     client:Client
   }) => {
     const [isLoading,save]=useTransition()
+    
     const [error, seterror] = useState("")
 
    const {fetchClients}=useContext(CleintContext)
@@ -60,6 +61,8 @@ const ClientDialog = (
         },
       })
     const onCreate=async(values: z.infer<typeof ClientSchema>)=>{
+
+     save(async()=>{
       const {name,username,password,maxcredit}=values
       try {
          await createClient(username,password,name,parseFloat(maxcredit))
@@ -69,50 +72,48 @@ const ClientDialog = (
        form.reset()
        } catch (error:unknown) {
          if (error instanceof Error) {
-             if(error.message.includes('Document with the requested ID already exists')){
-                 seterror('إسم المستخدم موجود مسبقا')
-             }else{
-              seterror(error.message)
-             }
+           
+          seterror(error.message)
+         
              
          }
        }
+     })
     }
 
     const onUpdate=async(values: z.infer<typeof ClientSchema>)=>{
-    const {name,username,password,maxcredit}=values
-      try {
-       await updateClient({
-          id:client.id,
-          username:username,
-          password:password,
-          name:name,
-          maxcredit:maxcredit
-        })
-        setOpen(false)
-        fetchClients()
-         
-       form.reset()
-       } catch (error:unknown) {
-         if (error instanceof Error) {
-          seterror(error.message)
+      save(async()=>{
+        const {name,username,password,maxcredit}=values
+        try {
+         await updateClient({
+            id:client.id,
+            username:username,
+            password:password,
+            name:name,
+            maxcredit:maxcredit
+          })
+          setOpen(false)
+          fetchClients()
+           
+         form.reset()
+         } catch (error:unknown) {
+           if (error instanceof Error) {
+            seterror(error.message)
+           }
          }
-       }
+      })
+    
     }
       function onSubmit(values: z.infer<typeof ClientSchema>) {
-       save(async()=>{
-      
         if(type==='CREATE'){
           onCreate(values)
         }else{
              onUpdate(values)
         }
-           
-
-       })
       }
+
+
     useEffect(()=>{
- 
     if(!open){
           form.reset()
           seterror("")
@@ -192,7 +193,7 @@ const ClientDialog = (
         />
         <p className='text-destructive text-center'>{error}</p>
            <DialogFooter>
-      <Button type="submit" className={`w-full mt-3 ${isLoading && 'opacity-50'}`} disabled={isLoading}>حفظ </Button>
+      <Button type="submit" className={`w-full mt-3`} disabled={isLoading}>حفظ </Button>
     </DialogFooter>
       </form>
     </Form>
