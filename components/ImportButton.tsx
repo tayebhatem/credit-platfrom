@@ -11,7 +11,7 @@ const ImportButton = ({title,onChange}:{title:string,onChange:(event: React.Chan
     };
   return (
     <span>
-    <Button className="gap-x-2 w-full" size={'lg'} variant={'outline'} onClick={handleImportExcel}>
+    <Button className="gap-x-2 w-full"  variant={'outline'} onClick={handleImportExcel}>
         <span className="">
          {title}
         </span>

@@ -25,8 +25,8 @@ import { Input } from "@/components/ui/input"
 import { ClientSchema } from '@/schemas'
 import { createClient } from '@/actions/createClient'
 import { CleintContext } from '@/context/ClientContext'
-import { Client } from '@/app/dashboard/client/page'
 import { updateClient } from '@/actions/updateClient'
+import { Client } from '@/app/dashboard/client/layout'
 
 
 const ClientDialog = (
@@ -51,6 +51,7 @@ const ClientDialog = (
 
    const {fetchClients}=useContext(CleintContext)
   const {username,password,name,maxcredit}=client
+  
     const form = useForm<z.infer<typeof ClientSchema>>({
         resolver: zodResolver(ClientSchema),
         defaultValues: {

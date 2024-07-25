@@ -6,31 +6,40 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Dialog } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import {Trash,UserPen} from 'lucide-react'
-
 import { ConfirmDialog } from '../ConfirmDialog'
-
 import { CreditContext } from '@/context/CreditContext'
-import CreditDialog from '../dialog/CreditDialog'
-
 import { Transaction } from '@/app/dashboard/credit/page'
 import { deleteTransaction } from '@/actions/deleteTransaction'
+import TransactionDialog from '../dialog/TransactionDialog'
+import { updateTransaction } from '@/actions/updateTransaction'
+import { usePathname } from 'next/navigation'
+import { TransactionContext } from '@/context/transactionContext'
 const TransactionDropDawn = ({transaction}:{transaction:Transaction}) => {
-  
+  const pathname=usePathname()
    const {fetchCredit}=useContext(CreditContext)
+  const {fetchTransactions}=useContext(TransactionContext)
    const [openConfirm, setopenConfirm] = useState(false)
 const [open,setOpen]=useState(false)
 
-   const onChange=async()=>{
+
+const onUpdate=async(amount:number)=>{
+   
+        const id=transaction.id
+        const data=await updateTransaction(id,amount)
+       pathname.includes('/dashboard/credit') && fetchCredit()
+       pathname.includes('/dashboard/client') && fetchTransactions()
+       if(data) setOpen(false)
+    }
+
+   const onDelete=async()=>{
          try {
         const id=transaction.id 
         if(!id) return
       await deleteTransaction(id)
-      
-      fetchCredit()
-        
+      pathname.includes('/dashboard/credit') && fetchCredit()
+       pathname.includes('/dashboard/client') && fetchTransactions()
          } catch (error:unknown) {
             if(error instanceof Error){
                 console.log(error.message)
@@ -40,6 +49,7 @@ const [open,setOpen]=useState(false)
           setopenConfirm(false)
          }
    }
+
 
    const editClient=async(open:boolean)=>{
     setOpen(open)
@@ -61,7 +71,7 @@ const [open,setOpen]=useState(false)
 
   return (
   <>
-  <ConfirmDialog onChange={onChange} open={openConfirm} onOpenChange={setopenConfirm}/>
+
     <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button variant="ghost" className="h-8 w-8 p-0">
@@ -82,22 +92,24 @@ const [open,setOpen]=useState(false)
       </DropdownMenuItem>
         ))
       }
-      
-     
     </DropdownMenuContent>
   </DropdownMenu>
   
-  <Dialog open={open} onOpenChange={setOpen}>
-  <CreditDialog 
-  title='تعديل إئتمان' 
-  description='' 
-  type='UPDATE'
-  open={open}
-  setOpen={setOpen}
-  transaction={transaction}
-   />
-  </Dialog>
+  <ConfirmDialog 
+  onChange={onDelete} 
+  open={openConfirm} 
+  onOpenChange={setopenConfirm}
+
+  />
+  <TransactionDialog
+  title='تعديل إئتمان'
+  amount={transaction.amount}
+  description=''  
+  onChange={onUpdate}
  
+open={open}
+setOpen={setOpen}
+  />
   </>
   )
 }

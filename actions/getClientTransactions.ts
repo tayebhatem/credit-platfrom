@@ -7,14 +7,13 @@ export const getClientTransactions=async(id:string,type:'credit'|'payment')=>{
     try {
         const session=await account.getSession('current')
         const user=session.userId
-        if(!user) throw Error
         const data=await database.listDocuments(
             config.databaseId,
             config.clientTransaction,
           [
             Query.equal('client',id),
             Query.equal('type',type),
-            Query.orderDesc('$createdAt')
+        
           ]
         )
     if(!data) throw Error

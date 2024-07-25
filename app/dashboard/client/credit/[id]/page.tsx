@@ -1,6 +1,7 @@
 'use client'
 
-import { createTransaction } from '@/actions/createTransaction'
+
+import { createTransactionByClientId } from '@/actions/createTransaction'
 import { getClientTransactions } from '@/actions/getClientTransactions'
 import { Transaction } from '@/app/dashboard/credit/page'
 import DatePicker from '@/components/DatePicker'
@@ -8,6 +9,7 @@ import TransactionDialog from '@/components/dialog/TransactionDialog'
 import TransactionTable from '@/components/table/TransactionTable'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { TransactionContext } from '@/context/transactionContext'
 import { PlusCircle, Printer } from 'lucide-react'
 import React, { useCallback, useEffect, useState, useTransition } from 'react'
 
@@ -15,14 +17,14 @@ const CreditPage = ({params}:{params:{id:string}}) => {
   const {id}=params
   const [open, setOpen] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[]>()
-  const [isLoading,onCreate]=useTransition()
-  const CreateCredit=(amount:number)=>{
-    onCreate(async()=>{
+ 
+
+  const CreateCredit=async(amount:number)=>{
+    
       try {
-        const transaction=await createTransaction(id,amount,'credit')
+        const transaction=await createTransactionByClientId(id,amount,'credit')
         if(transaction) {
           setOpen(false)
-         // setTransactions(prevTransactions=>[...prevTransactions,transaction])
          fetchTransactions()
         }
       } catch (error:unknown) {
@@ -30,7 +32,7 @@ const CreditPage = ({params}:{params:{id:string}}) => {
           console.log(error)
         }
       }
-})
+
   }
   const fetchTransactions= useCallback(
     async()=>{
@@ -53,12 +55,16 @@ const CreditPage = ({params}:{params:{id:string}}) => {
   },[])
 
   return (
+    <TransactionContext.Provider value={{fetchTransactions}} >
+
+    
     <div>
         <TransactionDialog
   title='أضف إئتمان'
   amount=""
   description=''  
   onChange={CreateCredit}
+ 
 open={open}
 setOpen={setOpen}
   />
@@ -82,7 +88,7 @@ setOpen={setOpen}
   transactions && <TransactionTable data={transactions}/>
 }
     </div>
-  
+    </TransactionContext.Provider>
   )
 }
 

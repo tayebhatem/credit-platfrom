@@ -17,6 +17,7 @@ import { navbar } from './Sidebar'
 import { usePathname, useRouter } from 'next/navigation'
 import {  avatar } from '@/lib/appwrite'
 import { useUser } from '@/hooks/useUser'
+import { ModeToggle } from '../ModeToggle'
   
 const DashbaordHeader = () => {
     const router=useRouter()
@@ -24,7 +25,7 @@ const DashbaordHeader = () => {
     const {user}=useUser()
     const avatarUrl=avatar.getInitials(user?.name).toString()
   return (
-    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <header className="flex h-14 items-center gap-4 border-b  bg-muted/40 px-4 lg:h-[60px] lg:px-6">
          <Sheet>
     <SheetTrigger asChild>
       <Button
@@ -63,10 +64,14 @@ const DashbaordHeader = () => {
           <div className="w-full flex-1">
             
           </div>
-          <Avatar >
+         <div className='flex flex-row gap-x-2'>
+         <ModeToggle/>
+         <Avatar >
       <AvatarImage  src={avatarUrl} alt="avatar" />
       <AvatarFallback>CR</AvatarFallback>
     </Avatar>
+   
+         </div>
         </header>
   )
 }

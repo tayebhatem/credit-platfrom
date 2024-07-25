@@ -52,7 +52,7 @@ export const columns: ColumnDef<Transaction>[] = [
         const transaction = row.original
      
         return (
-        <TransactionDropDawn transaction={transaction} />
+        <TransactionDropDawn transaction={transaction}  />
         )
       },
     }

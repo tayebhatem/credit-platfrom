@@ -13,7 +13,6 @@ import {
 import TransactionDropDawn from '../dropdawn/TransactionDropDawn';
 import { Transaction } from '@/app/dashboard/credit/page';
 import { format } from 'date-fns';
-import TransactionDialog from '../dialog/TransactionDialog';
 
   
 const TransactionTable = ({data}:{data:Transaction[]}) => {

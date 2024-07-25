@@ -51,14 +51,22 @@ const TransactionDialog = (
               })
               const onSubmit=async(values: z.infer<typeof TransactionSchema>)=>{
                 save(()=>{
-                    const {amount} =values
-                    onChange(parseFloat(amount))
+                    try {
+                        const {amount} =values
+                        onChange(parseFloat(amount))
+                      
+                    } catch (error:unknown) {
+                        if(error instanceof Error){
+                            seterror(error.message)
+                        }
+                    }
                 })
                
               }
     useEffect(()=>{
      if(!open){
         form.reset()
+        seterror('')
      }
     },[open])
   return (

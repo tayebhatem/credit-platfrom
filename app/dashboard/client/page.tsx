@@ -1,5 +1,5 @@
 'use client'
-import React, { createContext, useCallback, useEffect, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import {
     ColumnDef,
 
@@ -50,35 +50,19 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
       },
     },
   ]
-export interface Client{
-     id:string,
-    username:string;
-    password:string;
-    name:string;
-    maxcredit:string;
-}
-const ClientPage = () => {
-  const [clients, setclients] = useState<Models.Document[] | undefined>([])
-  const [open, setOpen] = React.useState(false)
-   const [client, setClient] = useState<Client>()
-  const fetchClients=useCallback(async()=>{
-    try {
-      const data=await getAllClients()
-      setclients(data)
-     } catch (error) {
-      
-     }
-  },[])
-  useEffect(()=>{
 
-     fetchClients()
-  },[])
+const ClientPage = () => {
+ 
+ const {clients,fetchClients}=useContext(CleintContext)
+ useEffect(()=>{
+  fetchClients()
+},[])
   return (
-    <CleintContext.Provider value={{fetchClients,open,setOpen,client,setClient}}>
+   
 <div>
         <ClientTable columns={columns} data={clients as any} />
     </div>
-    </CleintContext.Provider>
+   
     
   )
 }

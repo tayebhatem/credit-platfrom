@@ -21,8 +21,8 @@ import {
 import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useContext, useRef, useState, useTransition } from "react"
-import { Plus,Import } from "lucide-react"
+import React, { useContext, useEffect, useRef, useState, useTransition } from "react"
+import { Plus,Import, PlusCircle } from "lucide-react"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import ClientDialog from "../dialog/ClientDialog"
 import { CleintContext } from "@/context/ClientContext"
@@ -30,8 +30,8 @@ import ImportButton from "../ImportButton"
 import DatePicker from "../DatePicker";
 import CreditDialog from "../dialog/CreditDialog";
 import { CreditContext } from "@/context/CreditContext";
-import { createClientTransaction } from "@/actions/createClientTransactin";
 import { ProgressBar } from "../ProgressBar";
+import { createTransactionByClientUsername } from "@/actions/createTransaction";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -44,6 +44,7 @@ export function CreditTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+const [tabelData, setTabelData] = useState(data)
 const {fetchCredit}=useContext(CreditContext)
 const {date,setDate}=React.useContext(CreditContext)
 const [isLoading,uplaod]=useTransition()
@@ -71,14 +72,14 @@ const [isLoading,uplaod]=useTransition()
               creditData.map(async(item:any)=>{
                if(!item) return
                
-               const transaction:ClientTransaction={
-                username:item.client,
-                amount:item.montant
+               const transaction={
+                username:item.client as string,
+                amount:item.montant as number
                }
-
+             const {username,amount}=transaction
                try {
                 
-               await createClientTransaction(transaction,'credit')
+               await createTransactionByClientUsername(username,amount,'credit')
              
                } catch (error) {
                 console.log(error)
@@ -117,6 +118,11 @@ const [isLoading,uplaod]=useTransition()
       },
   })
 const [open,setOpen]=useState(false)
+
+
+useEffect(()=>{
+
+},[])
   return (
     <div className="w-full">
        <CreditDialog 
@@ -133,6 +139,8 @@ const [open,setOpen]=useState(false)
         amount:"",
       }}
        />
+
+       
         <div className="grid grid-cols-2 md:grid-cols-6  gap-4 justify-between items-center  my-4">
         <Input
           placeholder="...إبحث عن زبون"
@@ -155,11 +163,11 @@ const [open,setOpen]=useState(false)
     
     
 
-<Button className="gap-x-2 md:order-last" size={'lg'} onClick={()=>setOpen(true)}>
+<Button className="gap-x-2 md:order-last"  onClick={()=>setOpen(true)}>
   <span className="">
   أضف مبلغ
   </span>
-  <Plus/>
+  <PlusCircle/>
 </Button>
     
   

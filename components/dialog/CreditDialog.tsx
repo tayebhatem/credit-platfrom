@@ -22,11 +22,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { createClientTransaction } from '@/actions/createClientTransactin'
 import { CreditContext } from '@/context/CreditContext'
 import { ClientTransactionSchema } from '@/schemas'
 import { Transaction } from '@/app/dashboard/credit/page'
 import { updateTransaction } from '@/actions/updateTransaction'
+import { createTransactionByClientUsername } from '@/actions/createTransaction'
 
 
 
@@ -59,9 +59,9 @@ const CreditDialog = (
         },
       })
     const onCreate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
-      
+      const {amount,username}=values
       try {
-      const transaction=await createClientTransaction(values,'credit')
+      const transaction=await createTransactionByClientUsername(username,parseFloat(amount),'credit')
        if(transaction){
         fetchCredit()
         setOpen(false)

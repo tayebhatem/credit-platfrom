@@ -21,17 +21,17 @@ import {
 import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useContext, useRef, useState, useTransition } from "react"
-import { Plus,Import } from "lucide-react"
+import React, { useContext, useEffect, useRef, useState, useTransition } from "react"
+import { Plus,Import, PlusCircle } from "lucide-react"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import ClientDialog from "../dialog/ClientDialog"
 import { CleintContext } from "@/context/ClientContext"
 import ImportButton from "../ImportButton"
 import { createClient } from "@/actions/createClient";
-import { Client } from "@/app/dashboard/client/page";
 import { toast } from "sonner";
 import { ProgressBar } from "../ProgressBar";
 import { ProgressContext } from "@/providers/ProgressProvider";
+import { Client } from "@/app/dashboard/client/layout";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -123,6 +123,8 @@ const [isLoading,uplaod]=useTransition()
       },
   })
 const [open,setOpen]=useState(false)
+
+
   return (
     <div>
         <ClientDialog 
@@ -141,7 +143,7 @@ const [open,setOpen]=useState(false)
       }}
        />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-between items-center my-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 justify-between items-center my-4">
 
      
         <Input
@@ -150,26 +152,19 @@ const [open,setOpen]=useState(false)
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="col-span-2 md:max-w-sm text-right order-last md:order-first"
+          className="col-span-2 md:max-w-sm md:col-span-4 text-right order-last md:order-first"
         />
         
           
     <ImportButton onChange={handleFileChange} title="إستراد الزبائن"/>
 
-    <Button className="gap-x-2" size={'lg'} onClick={()=>setOpen(true)}>
+    <Button className="gap-x-2"  onClick={()=>setOpen(true)}>
   <span className="">
   أضف زبون
   </span>
-  <Plus/>
+  <PlusCircle/>
 </Button>
 
- 
-    
-
-
-    
-
-    
         </div>
 
 
@@ -213,13 +208,23 @@ const [open,setOpen]=useState(false)
                 ))}
               </TableRow>
             ))
-          ) : (
+          ) :isLoading? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
+              Loading ....
+              </TableCell>
+            </TableRow>
+          ):
+          (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
              لا يوجد
               </TableCell>
             </TableRow>
-          )}
+          )
+          
+          
+          }
         </TableBody>
       </Table>
     </div>
