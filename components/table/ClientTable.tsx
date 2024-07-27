@@ -29,9 +29,9 @@ import { CleintContext } from "@/context/ClientContext"
 import ImportButton from "../ImportButton"
 import { createClient } from "@/actions/createClient";
 import { toast } from "sonner";
-import { ProgressBar } from "../ProgressBar";
 import { ProgressContext } from "@/providers/ProgressProvider";
 import { Client } from "@/app/dashboard/client/layout";
+import TableLoader from "../TableLoader";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,8 +42,8 @@ export function ClientTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-const {fetchClients}=useContext(CleintContext)
-const {setShowProgress}=useContext(ProgressContext)
+const {fetchClients,loading}=useContext(CleintContext)
+const {setShowProgress,setProgress}=useContext(ProgressContext)
 const [isLoading,uplaod]=useTransition()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ const [isLoading,uplaod]=useTransition()
     const files = event.target.files;
   
     if (files && files[0]) {
-
+  setShowProgress(true)
       const file = files[0];
         
         try {
@@ -64,8 +64,9 @@ const [isLoading,uplaod]=useTransition()
               const sheetName = workbook.SheetNames[0];
               const worksheet = workbook.Sheets[sheetName];
               const clientData = XLSX.utils.sheet_to_json(worksheet);
+
+              const progress=100/clientData.length
               
-              setShowProgress(true)
               clientData.map(async(item:any)=>{
                if(!item) return
 
@@ -78,6 +79,9 @@ const [isLoading,uplaod]=useTransition()
                 }
               try {
                 await createClient(client.username,client.password,client.name,parseFloat(client.maxcredit))
+
+                setProgress((prevProgress: number)=>prevProgress+progress)
+                
               } catch (error) {
                 
               }
@@ -90,6 +94,12 @@ const [isLoading,uplaod]=useTransition()
           
           
           fetchClients()
+          
+        } catch (error) {
+          console.log(error)
+        }finally{
+          setShowProgress(false)
+          fetchClients()
           setShowProgress(false)
           toast.success(
             'نجاح',
@@ -98,10 +108,6 @@ const [isLoading,uplaod]=useTransition()
     }
             
            )
-        } catch (error) {
-          console.log(error)
-        }finally{
-         
         }
         
        
@@ -156,7 +162,7 @@ const [open,setOpen]=useState(false)
         />
         
           
-    <ImportButton onChange={handleFileChange} title="إستراد الزبائن"/>
+    <ImportButton onChange={handleFileChange} title="إستراد الزبائن" disabled={isLoading}/>
 
     <Button className="gap-x-2"  onClick={()=>setOpen(true)}>
   <span className="">
@@ -189,7 +195,21 @@ const [open,setOpen]=useState(false)
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {
+          loading?
+          (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="  justify-center items-center">
+           <div className="flex justify-center py-4">
+           <TableLoader/>
+           </div>
+
+              </TableCell>
+        
+          </TableRow>
+          )
+          :
+          table.getRowModel().rows?.length>0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

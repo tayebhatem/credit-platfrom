@@ -23,7 +23,8 @@ const DashbaordHeader = () => {
     const router=useRouter()
     const pathname=usePathname();
     const {user}=useUser()
-    const avatarUrl=avatar.getInitials(user?.name).toString()
+    
+   if(!user) return null
   return (
     <header className="flex h-14 items-center gap-4 border-b  bg-muted/40 px-4 lg:h-[60px] lg:px-6">
          <Sheet>
@@ -67,7 +68,7 @@ const DashbaordHeader = () => {
          <div className='flex flex-row gap-x-2'>
          <ModeToggle/>
          <Avatar >
-      <AvatarImage  src={avatarUrl} alt="avatar" />
+      <AvatarImage  src={user?.avatar} alt="avatar"   />
       <AvatarFallback>CR</AvatarFallback>
     </Avatar>
    

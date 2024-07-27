@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import {
     Bell,
@@ -26,6 +26,7 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { logout } from '@/lib/appwrite'
+import { LoaderContext } from '@/providers/LoaderProvider'
  export const navbar=[
     { 
       name:'الرئيسية',
@@ -81,16 +82,20 @@ import { logout } from '@/lib/appwrite'
 const Sidebar = () => {
     const router=useRouter()
     const pathname=usePathname()
+    const {setloader}=useContext(LoaderContext)
     const isClientDashboardPath = (path: string): boolean => {
       const regex = /^\/dashboard\/client(\/.*)?$/;
       return regex.test(path);
     };
     const logOut=async()=>{
+      setloader(true)
         try {
          await logout()
          router.replace('../sign-in')
         } catch (error) {
          
+        }finally{
+          setloader(true)
         }
      }
   return (

@@ -101,3 +101,14 @@ data.documents.map(
 
 return sum
 }
+
+
+export const getClientMaxCredit=async(id:string)=>{
+      const data=await database.getDocument(
+             config.databaseId,
+             config.clientTable,
+             id
+      )
+
+      return data.maxcredit as number
+}

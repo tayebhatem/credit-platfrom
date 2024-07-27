@@ -27,6 +27,7 @@ import { ClientTransactionSchema } from '@/schemas'
 import { Transaction } from '@/app/dashboard/credit/page'
 import { updateTransaction } from '@/actions/updateTransaction'
 import { createTransactionByClientUsername } from '@/actions/createTransaction'
+import { LoaderContext } from '@/providers/LoaderProvider'
 
 
 
@@ -36,21 +37,19 @@ const CreditDialog = (
   open,
   setOpen,
   description,
-  type,
   transaction
    }:{
     open:boolean,
     setOpen:(open:boolean)=>void
     title:string,
     description:string,
-    type:'CREATE' | 'UPDATE',
     transaction:Transaction
   }) => {
     const [isLoading,save]=useTransition()
     const [error, seterror] = useState("")
 
     const {fetchCredit}=useContext(CreditContext)
-
+    const {setloader}=useContext(LoaderContext)
     const form = useForm<z.infer<typeof ClientTransactionSchema>>({
         resolver: zodResolver(ClientTransactionSchema),
         defaultValues: {
@@ -58,10 +57,14 @@ const CreditDialog = (
           amount:transaction?.amount
         },
       })
-    const onCreate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
-      const {amount,username}=values
+    
+      function onSubmit(values: z.infer<typeof ClientTransactionSchema>) {
+        
+       save(async()=>{
+      
+        const {amount,username}=values
       try {
-      const transaction=await createTransactionByClientUsername(username,parseFloat(amount),'credit')
+      const transaction=await createTransactionByClientUsername(username,parseFloat(amount))
        if(transaction){
         fetchCredit()
         setOpen(false)
@@ -78,34 +81,6 @@ const CreditDialog = (
              
          }
        }
-    }
-
-    const onUpdate=async(values: z.infer<typeof ClientTransactionSchema>)=>{
-    const {amount}=values
-      try {
-        const id=transaction.id
-        const data=await updateTransaction(id,parseFloat(amount))
-
-       if(data){
-        setOpen(false)
-        fetchCredit()
-         
-       form.reset()
-       }
-       } catch (error:unknown) {
-         if (error instanceof Error) {
-          seterror(error.message)
-         }
-       }
-    }
-      function onSubmit(values: z.infer<typeof ClientTransactionSchema>) {
-       save(async()=>{
-      
-        if(type==='CREATE'){
-          onCreate(values)
-        }else{
-             onUpdate(values)
-        }
            
 
        })
@@ -135,8 +110,8 @@ const CreditDialog = (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
        
-        {
-          type==='CREATE' &&  <FormField
+        
+            <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
@@ -151,7 +126,7 @@ const CreditDialog = (
           )}
         />
         
-        }
+        
         <FormField
           control={form.control}
           name="amount"

@@ -1,4 +1,4 @@
-import { ID, account, config, database, getClient } from "@/lib/appwrite"
+import { ID, account, avatar, config, database, getClient } from "@/lib/appwrite"
 
 export const createClient=async(username:string,password:string,name:string,maxcredit:number)=>{
     const session=await account.getSession('current')
@@ -7,6 +7,8 @@ export const createClient=async(username:string,password:string,name:string,maxc
         if(clientUser){
          throw new Error('إسم المستخدم محجوز')
         }
+
+        const avatarUrl=avatar.getInitials(name).toString()
         const client=await database.createDocument(
             config.databaseId,
             config.clientTable,
@@ -16,7 +18,8 @@ export const createClient=async(username:string,password:string,name:string,maxc
              username,
              name,
              password,
-             maxcredit
+             maxcredit,
+             avatar:avatarUrl
             }
         )
   

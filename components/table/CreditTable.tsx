@@ -34,6 +34,8 @@ import CreditDialog from "../dialog/CreditDialog";
 import { CreditContext } from "@/context/CreditContext";
 import { ProgressBar } from "../ProgressBar";
 import { createTransactionByClientUsername } from "@/actions/createTransaction";
+import TableLoader from "../TableLoader";
+import { ProgressContext } from "@/providers/ProgressProvider";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -46,17 +48,18 @@ export function CreditTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-const [tabelData, setTabelData] = useState(data)
-const {fetchCredit}=useContext(CreditContext)
+const {fetchCredit,loading}=useContext(CreditContext)
+const {setProgress,setShowProgress}=useContext(ProgressContext)
 const {date,setDate}=React.useContext(CreditContext)
 const [isLoading,uplaod]=useTransition()
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    
   uplaod(()=>{
     const files = event.target.files;
   
     if (files && files[0]) {
-
+      setShowProgress(true)
       const file = files[0];
         
         try {
@@ -69,7 +72,7 @@ const [isLoading,uplaod]=useTransition()
               const sheetName = workbook.SheetNames[0];
               const worksheet = workbook.Sheets[sheetName];
               const creditData = XLSX.utils.sheet_to_json(worksheet);
-              
+              const progress=100/creditData.length
             
               creditData.map(async(item:any)=>{
                if(!item) return
@@ -82,16 +85,17 @@ const [isLoading,uplaod]=useTransition()
                try {
                 
                await createTransactionByClientUsername(username,amount)
-             
+
+               setProgress((prevProgress: number)=>prevProgress+progress)
+
                } catch (error) {
                 console.log(error)
                }
 
               
               })
-
-              fetchCredit()
             
+             
           };
 
           reader.readAsArrayBuffer(file);
@@ -99,6 +103,9 @@ const [isLoading,uplaod]=useTransition()
 
         } catch (error) {
           console.log(error)
+        }finally{
+          setShowProgress(false)
+          fetchCredit()
         }
         
        
@@ -132,7 +139,6 @@ useEffect(()=>{
        setOpen={setOpen}
       title="إضافة مبلغ" 
       description=" Make changes to your profile here. Click save when you're done."
-      type="CREATE"
       transaction={{
         date:new Date(),
         id:"",
@@ -159,7 +165,7 @@ useEffect(()=>{
     <DatePicker date={date} setDate={setDate}/>
     </div>
     <div className="md:order-3">
-    <ImportButton onChange={handleFileChange} title="إستراد الإئتمان"/>
+    <ImportButton onChange={handleFileChange} title="إستراد الإئتمان" disabled={isLoading}/>
 
     </div>
     
@@ -199,7 +205,23 @@ useEffect(()=>{
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+         
+          {
+         loading?
+          (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="  justify-center items-center">
+           <div className="flex justify-center py-4">
+           <TableLoader/>
+           </div>
+
+              </TableCell>
+        
+          </TableRow>
+          )
+          :
+
+          table.getRowModel().rows?.length>0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -227,7 +249,9 @@ useEffect(()=>{
              لا يوجد
               </TableCell>
             </TableRow>
-          )}
+          )
+          
+          }
         </TableBody>
       </Table>
     </div>

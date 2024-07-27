@@ -29,12 +29,12 @@ const DatePicker = ({date,setDate}:{date:Date,setDate:(date:Date)=>void}) => {
         {date ? format(date, "yyyy-MM-dd") : <span>Pick a date</span>}
       </Button>
     </PopoverTrigger>
-    <PopoverContent className="w-auto p-0">
+    <PopoverContent className="w-auto p-0" align="start">
       <Calendar
         mode="single"
         selected={date}
         onSelect={setDate}
-        lang="ar"
+        lang="FR"
         initialFocus
         
       />

@@ -10,20 +10,21 @@ import {
     TableRow,
     
   } from "@/components/ui/table"
-
+  import { ScrollArea } from "@/components/ui/scroll-area"
 import TransactionDropDawn from '../dropdawn/TransactionDropDawn';
 import { Transaction } from '@/app/dashboard/credit/page';
 import { format } from 'date-fns';
-import { Payment } from '@/app/dashboard/client/payment/[id]/page';
+import TableLoader from '../TableLoader';
+
 
   
-const TransactionTable = ({data,total}:{data:Transaction[] | undefined,total:number}) => {
+const TransactionTable = ({data,loading,total}:{data:Transaction[] | undefined,loading:boolean,total:number}) => {
    
     
   return (
   <>
 
-    <div className="rounded-md border">
+    <ScrollArea  className="rounded-md border">
 
  
 <Table >
@@ -37,9 +38,23 @@ const TransactionTable = ({data,total}:{data:Transaction[] | undefined,total:num
   <TableHead className="" ></TableHead>
 </TableRow>
 </TableHeader>
-<TableBody className='max-h-14 overflow-auto'>
 
+
+<TableBody>
 {
+  loading?
+  (
+    <TableRow>
+      <TableCell colSpan={6} className="  justify-center items-center">
+   <div className="flex justify-center py-4">
+   <TableLoader/>
+   </div>
+
+      </TableCell>
+
+  </TableRow>
+  )
+  :
 data && data.length>0 ?   data?.map((item)=>(
 <TableRow>
    <TableCell hidden>{item.id}</TableCell>
@@ -50,7 +65,9 @@ data && data.length>0 ?   data?.map((item)=>(
 <TransactionDropDawn transaction={item} />
 </TableCell>
 </TableRow>
-)):
+))
+
+:
 <TableRow >
 
 <TableCell className='h-24 text-center text-lg'  colSpan={5}>
@@ -58,6 +75,7 @@ data && data.length>0 ?   data?.map((item)=>(
 </TableCell>
 </TableRow>
 }
+
 
 </TableBody>
 {
@@ -70,7 +88,7 @@ data && data.length>0 ?   data?.map((item)=>(
 </TableFooter>
 }
 </Table>
-</div>
+</ScrollArea>
 
   </>
   )

@@ -2,7 +2,7 @@
 
 
 import { createTransactionByClientId } from '@/actions/createTransaction'
-import { getCreditTransactions } from '@/actions/getClientTransactions'
+import { getClientMaxCredit, getCreditTransactions, getTotalClientTransactions } from '@/actions/getClientTransactions'
 
 import { Transaction } from '@/app/dashboard/credit/page'
 import DatePicker from '@/components/DatePicker'
@@ -20,26 +20,33 @@ const CreditPage = ({params}:{params:{id:string}}) => {
   const {id}=params
   const [open, setOpen] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[]>()
+  const [loading, setloading] = useState(true)
   const [total, setTotal] = useState<number>(0)
  const router=useRouter()
 
   const CreateCredit=async(amount:number)=>{
-    
-      try {
+   try {
+    const maxcredit=await getClientMaxCredit(id)
+    if(maxcredit<amount+total){
+        throw  Error('الإئتمان الكلي أكثر من الحد الأقصى')
+        
+    }
+
         const transaction=await createTransactionByClientId(id,amount,'CREDIT')
         if(transaction) {
           setOpen(false)
          fetchTransactions()
         }
-      } catch (error:unknown) {
-        if(error instanceof Error){
-          console.log(error)
-        }
-      }
-
+   } catch (error:unknown) {
+    if(error instanceof Error){
+    console.log(error.message)
+  }
+   }
   }
   const fetchTransactions= useCallback(
+    
     async()=>{
+      setloading(true)
       try {
         
         const data=await getCreditTransactions(id)
@@ -49,6 +56,8 @@ const CreditPage = ({params}:{params:{id:string}}) => {
         setTransactions(data)
       } catch (error) {
         console.log(error)
+      }finally{
+        setloading(false)
       }
    }
     ,[])
@@ -104,7 +113,7 @@ setOpen={setOpen}
      </Button>
           </div>
 {
-  <TransactionTable data={transactions}  total={total} />
+  <TransactionTable data={transactions}  total={total} loading={loading}/>
 }
 
     </div>

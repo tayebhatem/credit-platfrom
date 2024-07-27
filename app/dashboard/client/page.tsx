@@ -52,7 +52,7 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
   ]
 
 const ClientPage = () => {
- 
+
  const {clients,fetchClients}=useContext(CleintContext)
  useEffect(()=>{
   fetchClients()

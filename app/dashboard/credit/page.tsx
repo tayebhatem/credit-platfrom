@@ -52,7 +52,7 @@ export const columns: ColumnDef<Transaction>[] = [
         const transaction = row.original
      
         return (
-        <TransactionDropDawn transaction={transaction}  type='CREDIT' />
+        <TransactionDropDawn transaction={transaction}  />
         )
       },
     }
@@ -67,7 +67,9 @@ export interface Transaction{
 const CreditPage = () => {
   const [credit, setCredit] = useState<any>([])
   const [date, setDate] = React.useState<Date>(new Date())
+  const [loading, setloading] = useState(true)
   const fetchCredit=useCallback(async()=>{
+    setloading(true)
     try {
       const data=await getAllTransactions()
       
@@ -75,6 +77,8 @@ const CreditPage = () => {
       setCredit(transactions)
      } catch (error) {
       console.log(error)
+     }finally{
+      setloading(false)
      }
   },[date])
 
@@ -83,7 +87,7 @@ const CreditPage = () => {
     fetchCredit()
   },[date])
   return (
-    <CreditContext.Provider value={{fetchCredit,date,setDate}}>
+    <CreditContext.Provider value={{fetchCredit,date,setDate,loading}}>
 
         <CreditTable columns={columns} data={credit as any} />
     

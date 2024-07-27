@@ -51,7 +51,9 @@ export const createUser=async()=>{
         if(!accountUser) throw new Error('User does not exists')
         const {$id,name}=accountUser
     const user=await getUser()
+
     if(!user){
+        const avatarUrl=avatar.getInitials(name).toString()
         await database.createDocument(
             config.databaseId,
             config.userTableId,
@@ -59,7 +61,8 @@ export const createUser=async()=>{
             {
                 name:name,
                 phone:"",
-                adress:""
+                adress:"",
+                avatar:avatarUrl
             }
             )
     }

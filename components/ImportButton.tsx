@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Import } from 'lucide-react';
-const ImportButton = ({title,onChange}:{title:string,onChange:(event: React.ChangeEvent<HTMLInputElement>) => void}) => {
+const ImportButton = ({title,disabled,onChange}:{title:string,disabled:boolean,onChange:(event: React.ChangeEvent<HTMLInputElement>) => void}) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleImportExcel = () => {

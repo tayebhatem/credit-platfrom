@@ -14,21 +14,24 @@ export interface Client{
 }
 const ClientLayout = ({children}:{children:ReactNode}) => {
     const [clients, setclients] = useState<Models.Document[] | undefined>([])
-  
+    const [loading, setloading] = useState(true)
     const [client, setClient] = useState<Client>()
   
     const fetchClients=useCallback(async()=>{
+      setloading(true)
         try {
           const data=await getAllClients()
           setclients(data)
          } catch (error) {
           
+         }finally{
+          setloading(false)
          }
       },[])
  
   return (
     <>
-     <CleintContext.Provider value={{fetchClients,client,clients,setClient}}>
+     <CleintContext.Provider value={{fetchClients,loading,client,clients,setClient}}>
      {
         children
     }
