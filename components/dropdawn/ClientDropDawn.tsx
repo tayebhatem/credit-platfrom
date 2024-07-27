@@ -81,6 +81,7 @@ const [open,setOpen]=useState(false)
       {
         dropdawn.map((item)=>(
           <DropdownMenuItem
+          key={item.name}
       className='cursor-pointer items-center text-muted-foreground gap-x-2'
         onClick={()=>item.action(client)}
       >

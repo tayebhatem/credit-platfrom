@@ -8,7 +8,7 @@ import {
 import { CreditTable } from '@/components/table/CreditTable'
 
 import { CreditContext } from '@/context/CreditContext'
-import { getTransaction } from '@/actions/getTransaction'
+import { getAllTransactions } from '@/actions/getAllTransactions'
 import { format } from 'date-fns'
 import TransactionDropDawn from '@/components/dropdawn/TransactionDropDawn'
 
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Transaction>[] = [
         const transaction = row.original
      
         return (
-        <TransactionDropDawn transaction={transaction}  />
+        <TransactionDropDawn transaction={transaction}  type='CREDIT' />
         )
       },
     }
@@ -69,7 +69,7 @@ const CreditPage = () => {
   const [date, setDate] = React.useState<Date>(new Date())
   const fetchCredit=useCallback(async()=>{
     try {
-      const data=await getTransaction('credit')
+      const data=await getAllTransactions()
       
     const transactions= data?.filter(item=>item.date===format(date,'yyyy-MM-dd'))
       setCredit(transactions)

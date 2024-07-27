@@ -1,6 +1,6 @@
 'use client'
 import { getAllClients } from '@/actions/getAllClients'
-import { getTransaction } from '@/actions/getTransaction'
+import { getAllTransactions, getTotalTransactions } from '@/actions/getAllTransactions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building, Users, Users2, Users2Icon,Truck,CurrencyIcon,DollarSign } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -20,12 +20,9 @@ const DashboardPage = () => {
    }
    const fetchCredit=async()=>{
     try {
-      const data=await getTransaction('credit')
-      let total=0;
-      data?.map((item)=>{
-       total= (parseFloat(item.amount)+total)
-      })
-      setTotalCredit(total)
+      const data=await getTotalTransactions()
+     
+      setTotalCredit(data)
      } catch (error) {
       console.log(error)
      }

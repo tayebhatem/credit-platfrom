@@ -43,7 +43,7 @@ export const columns: ColumnDef<Models.Document | undefined>[] = [
       id: "actions",
       cell: ({ row }) => {
         const client = row.original
-       console.log(client)
+       
         return (
         <ClientDropDawn client={client}/>
         )

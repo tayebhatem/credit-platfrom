@@ -19,30 +19,22 @@ import { deleteTransaction } from '@/actions/deleteTransaction'
 import { Payment } from '@/app/dashboard/client/payment/[id]/page'
 
 
-const TransactionDropDawn = ({transaction}:{transaction:Transaction | Payment}) => {
+const PaymentDropDawn = ({transaction}:{transaction:Payment}) => {
   const pathname=usePathname()
-   const {fetchCredit}=useContext(CreditContext)
+
 const {fetchTransactions}=useContext(TransactionContext)
    const [openConfirm, setopenConfirm] = useState(false)
 const [open,setOpen]=useState(false)
 
 
-const onUpdate=async(amount:number)=>{
-   
-        const id=transaction.id
-        const data=await updateTransaction(id,amount)
-       pathname.includes('/dashboard/credit') && fetchCredit()
-       pathname.includes('/dashboard/client') && fetchTransactions()
-       if(data) setOpen(false)
-    }
+
 
    const onDelete=async()=>{
          try {
         const id=transaction.id 
         if(!id) return
       await deleteTransaction(id)
-      pathname.includes('/dashboard/credit') && fetchCredit()
-       pathname.includes('/dashboard/client') && fetchTransactions()
+      fetchTransactions()
          } catch (error:unknown) {
             if(error instanceof Error){
                 console.log(error.message)
@@ -56,23 +48,8 @@ const onUpdate=async(amount:number)=>{
 const printPayment=()=>{
   
 }
-   const editClient=async(open:boolean)=>{
-    setOpen(open)
-   }
-
-    const creditDropDawn=[
-       
-       { 
-        name:'تعديل',
-        icon:<UserPen/>,
-        action:()=>{editClient(true)}
-      },
-      { 
-        name:'حذف',
-        icon:<Trash/>,
-        action:()=>{setopenConfirm(true)}
-      },
-      ]
+   
+    
       const paymentDropDawn=[
        
         { 
@@ -100,8 +77,9 @@ const printPayment=()=>{
     <DropdownMenuContent align="end" className='space-y-2' >
      
       {
-        creditDropDawn.map((item)=>(
+        paymentDropDawn.map((item)=>(
           <DropdownMenuItem
+          key={item.name}
       className='cursor-pointer items-center text-muted-foreground gap-x-2'
         onClick={()=>item.action()}
       >
@@ -109,6 +87,7 @@ const printPayment=()=>{
         {item.name}
       </DropdownMenuItem>
         ))
+       
       }
 
 
@@ -121,17 +100,9 @@ const printPayment=()=>{
   onOpenChange={setopenConfirm}
 
   />
-  <TransactionDialog
-  title='تعديل إئتمان'
-  amount={transaction.amount}
-  description=''  
-  onChange={onUpdate}
  
-open={open}
-setOpen={setOpen}
-  />
   </>
   )
 }
 
-export default TransactionDropDawn
+export default PaymentDropDawn

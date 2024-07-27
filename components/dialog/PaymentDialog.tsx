@@ -23,11 +23,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { TransactionSchema } from '@/schemas'
-const TransactionDialog = (
+const PaymentDialog = (
         {title,
         onChange,
         description,
         amount,
+        total,
         open,
         setOpen,
     }:
@@ -36,10 +37,12 @@ const TransactionDialog = (
         onChange:(amount:number)=>void,
         description:string,
         amount:string,
+        total:number,
         open:boolean,
         setOpen:(open:boolean)=>void
 
         }) => {
+            const [newAmount, setnewAmount] = useState(0)
             const [isLoading,save]=useTransition()
             const [error, seterror] = useState("")
         
@@ -53,7 +56,12 @@ const TransactionDialog = (
                 save(()=>{
                     try {
                         const {amount} =values
-                        onChange(parseFloat(amount))
+                        if(parseFloat(amount)<=total){
+                            onChange(parseFloat(amount))
+                        }else{
+                            seterror('المبلغ المدفوع أكثر من الإئتمان الحالي')
+                        }
+                      
                       
                     } catch (error:unknown) {
                       
@@ -70,6 +78,10 @@ const TransactionDialog = (
         seterror('')
      }
     },[open])
+
+    useEffect(()=>{
+        setnewAmount(parseFloat(form.getValues().amount))
+    },[form])
   return (
     <Dialog open={open} onOpenChange={setOpen}>
 
@@ -82,7 +94,9 @@ const TransactionDialog = (
       </DialogTitle>
       <DialogDescription>
        {description}
+       
       </DialogDescription>
+    
     </DialogHeader>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -95,7 +109,7 @@ const TransactionDialog = (
             <FormItem>
               <FormLabel> المبلغ</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} type='number' min={0}   />
+                <Input placeholder="" {...field} type='number' min={0}    />
               </FormControl>
             
               <FormMessage />
@@ -114,4 +128,4 @@ const TransactionDialog = (
   )
 }
 
-export default TransactionDialog
+export default PaymentDialog

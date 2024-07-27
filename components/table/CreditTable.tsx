@@ -8,7 +8,9 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  
 } from "@tanstack/react-table"
+
 
 import {
   Table,
@@ -79,7 +81,7 @@ const [isLoading,uplaod]=useTransition()
              const {username,amount}=transaction
                try {
                 
-               await createTransactionByClientUsername(username,amount,'credit')
+               await createTransactionByClientUsername(username,amount)
              
                } catch (error) {
                 console.log(error)
@@ -140,7 +142,7 @@ useEffect(()=>{
       }}
        />
 
-       
+
         <div className="grid grid-cols-2 md:grid-cols-6  gap-4 justify-between items-center  my-4">
         <Input
           placeholder="...إبحث عن زبون"
@@ -230,7 +232,8 @@ useEffect(()=>{
       </Table>
     </div>
 
-    <div className="flex items-center justify-end space-x-2 py-4">
+    <div className="flex items-center justify-center space-x-2 py-4">
+     
         <Button
           variant="outline"
           size="sm"
@@ -248,6 +251,7 @@ useEffect(()=>{
           التالي
         </Button>
       </div>
+     
     </div>
   )
 }

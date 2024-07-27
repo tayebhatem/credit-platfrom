@@ -18,7 +18,8 @@ export const config={
     databaseId:'66a02c2c0037f2813b8f',
     userTableId:'66a02c88001a68ba36c0',
     clientTable:'66a02d260003e362834e',
-    clientTransaction:'66a02dc9002e06922fdf'
+    clientTransaction:'66a02dc9002e06922fdf',
+    clientPayment:'66a2e30d0001546cebde'
 }
 export const getUser=async()=>{
 try {
