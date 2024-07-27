@@ -15,9 +15,10 @@ import { format } from 'date-fns';
 import { Payment } from '@/app/dashboard/client/payment/[id]/page';
 
 import PaymentDropDawn from '../dropdawn/PaymentDropDawn';
+import TableLoader from '../TableLoader';
 
   
-const PaymentTable = ({data,total}:{data: Payment[] | undefined,total:number}) => {
+const PaymentTable = ({data,loading,total}:{data: Payment[] | undefined,loading:boolean,total:number}) => {
    
     
   return (
@@ -42,8 +43,21 @@ const PaymentTable = ({data,total}:{data: Payment[] | undefined,total:number}) =
 <TableBody>
 
 {
+     loading?
+     (
+       <TableRow>
+         <TableCell colSpan={6} className="  justify-center items-center">
+      <div className="flex justify-center py-4">
+      <TableLoader/>
+      </div>
+   
+         </TableCell>
+   
+     </TableRow>
+     )
+     :
 data && data.length>0 ?   data?.map((item)=>(
-<TableRow>
+<TableRow key={item.id}>
    <TableCell hidden>{item.id}</TableCell>
    <TableCell className='text-base'>{item.amount}.00 DA</TableCell>
    <TableCell className='text-base'>{item.oldAmount}.00 DA</TableCell>
@@ -65,13 +79,13 @@ data && data.length>0 ?   data?.map((item)=>(
 
 </TableBody>
 {
- <TableFooter>
-<TableRow>
-
-  <TableCell className='text-lg' colSpan={4}>{total.toFixed(2)} DA</TableCell>
-  <TableCell className='text-lg' colSpan={3} > المبلغ الكلي </TableCell>
-</TableRow>
-</TableFooter>
+ total>0 && <TableFooter>
+ <TableRow>
+ 
+   <TableCell className='text-lg' colSpan={4}>{total.toFixed(2)} DA</TableCell>
+   <TableCell className='text-lg' colSpan={3} > المبلغ الكلي </TableCell>
+ </TableRow>
+ </TableFooter>
 }
 </Table>
 </div>

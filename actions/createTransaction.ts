@@ -1,10 +1,15 @@
 'use server'
+
 import { ID, config, database, getClient } from "@/lib/appwrite"
-import { getClientMaxCredit, getTotalClientTransactions } from "./getClientTransactions"
+import { createClientDelay } from "./clientDelay"
+
+
 
 
 export const createTransactionByClientId=async(client:string,amount:number,type:'CREDIT'| 'PAYMENT')=>{
-   
+  if(type==='CREDIT'){
+    await createClientDelay(client)
+  }
     const transaction=await database.createDocument(
         config.databaseId,
         config.clientTransaction,
@@ -15,6 +20,9 @@ export const createTransactionByClientId=async(client:string,amount:number,type:
           type
         }
     )
+
+   
+
 return transaction
 }
 

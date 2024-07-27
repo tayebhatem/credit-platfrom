@@ -14,19 +14,30 @@ import { TransactionContext } from '@/context/TransactionContext'
 
 import { DollarSign, PlusCircle, Printer } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useState, useTransition } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 
 const CreditPage = ({params}:{params:{id:string}}) => {
   const {id}=params
   const [open, setOpen] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[]>()
   const [loading, setloading] = useState(true)
-  const [total, setTotal] = useState<number>(0)
+  
  const router=useRouter()
+ const total=useMemo(()=>{
+  if(transactions){
+ return transactions.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.amount), 0)
+  }else{
+    return 0
+  }
+ 
+ },[transactions])
 
   const CreateCredit=async(amount:number)=>{
+   
    try {
+   
     const maxcredit=await getClientMaxCredit(id)
+
     if(maxcredit<amount+total){
         throw  Error('الإئتمان الكلي أكثر من الحد الأقصى')
         
@@ -50,8 +61,7 @@ const CreditPage = ({params}:{params:{id:string}}) => {
       try {
         
         const data=await getCreditTransactions(id)
-        console.log(data)
-        calculateTotal(data)
+        
         if(!data) return
         setTransactions(data)
       } catch (error) {
@@ -62,19 +72,10 @@ const CreditPage = ({params}:{params:{id:string}}) => {
    }
     ,[])
   
- const calculateTotal=(data: Transaction[] | undefined)=>{
-   
-  let sum=0
-  data?.map(
-    (item)=>{
-      sum=parseFloat(item.amount)+sum
-    }
-  )
+ 
 
-  setTotal(sum)
- }
   useEffect(()=>{
-   
+
     fetchTransactions()
    
   },[])
@@ -107,13 +108,13 @@ setOpen={setOpen}
          </span>
          <Printer/>
       </Button>
-     <Button className='gap-x-2' variant={'destructive'} onClick={()=>router.push('/dashboard/client/payment/'+id)}>
+     <Button className='gap-x-2' variant={'link'} onClick={()=>router.push('/dashboard/client/payment/'+id)}>
      <span>دفع</span> 
      <DollarSign/>
      </Button>
           </div>
 {
-  <TransactionTable data={transactions}  total={total} loading={loading}/>
+  <TransactionTable data={transactions}  total={total as number} loading={loading}/>
 }
 
     </div>

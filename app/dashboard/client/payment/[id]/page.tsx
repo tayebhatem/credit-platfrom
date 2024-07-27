@@ -25,6 +25,7 @@ const PaymentPage = ({params}:{params:{id:string}}) => {
   const {id}=params
   const [open, setOpen] = useState(false)
   const [transactions, setTransactions] = useState<Payment[]>()
+  const [loading, setloading] = useState(true)
  const [total, setTotal] = useState<number>(0)
 
   const CreateNewPayment=async(amount:number)=>{
@@ -47,27 +48,23 @@ const PaymentPage = ({params}:{params:{id:string}}) => {
   }
   const fetchTransactions= useCallback(
     async()=>{
+      setloading(true)
       try {
-        
+        const sum=await getTotalClientTransactions(id)
+        setTotal(sum)
         const data=await getPaymentTransaction(id)
-        
-        if(!data) return
-        console.log(data)
-        fetchTotal()
         setTransactions(data)
       } catch (error) {
         console.log(error)
+      }finally{
+        setloading(false)
       }
    }
     ,[])
-    const fetchTotal=async()=>{
-    const sum=await getTotalClientTransactions(id)
-    console.log(sum)
-      setTotal(sum)
-     }
+    
+    
  
   useEffect(()=>{
-
    fetchTransactions()
   },[])
 
@@ -106,7 +103,7 @@ setOpen={setOpen}
     
           </div>
 {
-   <PaymentTable data={transactions} total={total}/>
+   <PaymentTable data={transactions} total={total} loading={loading}/>
 }
     </div>
     </TransactionContext.Provider>

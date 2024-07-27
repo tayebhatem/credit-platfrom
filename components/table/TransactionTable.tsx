@@ -30,7 +30,7 @@ const TransactionTable = ({data,loading,total}:{data:Transaction[] | undefined,l
 <Table >
 <TableCaption></TableCaption>
 <TableHeader>
-<TableRow>
+<TableRow >
   <TableHead className="" hidden></TableHead>
   <TableHead className='text-base'>المبلغ</TableHead>
   <TableHead className='text-base'>التاريخ</TableHead>
@@ -56,7 +56,7 @@ const TransactionTable = ({data,loading,total}:{data:Transaction[] | undefined,l
   )
   :
 data && data.length>0 ?   data?.map((item)=>(
-<TableRow>
+<TableRow key={item.id}>
    <TableCell hidden>{item.id}</TableCell>
 <TableCell className='text-base'>{item.amount}.00 DA</TableCell>
 <TableCell className='text-base'>{format(item.date, 'yyyy-MM-dd')}</TableCell>

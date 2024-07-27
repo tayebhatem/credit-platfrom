@@ -70,9 +70,6 @@ export const getPaymentTransaction=async(id:string)=>{
     }
     )
 
-   
-
-    
     return payments
 
 }
@@ -89,16 +86,7 @@ export const  getTotalClientTransactions=async(id:string)=>{
     Query.equal('type','CREDIT'),
   ]
 )
-
-let sum=0
-
-data.documents.map(
-  (item)=>{
-    sum=item.amount+sum
-  }
-)
-
-
+const sum=data.documents.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue.amount), 0)
 return sum
 }
 
