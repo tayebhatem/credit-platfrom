@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import {
     Bell,
@@ -27,6 +27,8 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { logout } from '@/lib/appwrite'
 import { LoaderContext } from '@/providers/LoaderProvider'
+import { getNotJusfiedDelayCount } from '@/actions/clientDelay'
+import { useUser } from '@/hooks/useUser'
  export const navbar=[
     { 
       name:'الرئيسية',
@@ -83,6 +85,8 @@ const Sidebar = () => {
     const router=useRouter()
     const pathname=usePathname()
     const {setloader}=useContext(LoaderContext)
+    const [delayCount, setdelayCount] = useState(0)
+   
     const isClientDashboardPath = (path: string): boolean => {
       const regex = /^\/dashboard\/client(\/.*)?$/;
       return regex.test(path);
@@ -98,6 +102,25 @@ const Sidebar = () => {
           setloader(true)
         }
      }
+   
+
+     useEffect(()=>{
+
+      const delayCount=async()=>{
+         try {
+          const count=await getNotJusfiedDelayCount()
+          if(!count) return
+          setdelayCount(count)
+          console.log('count  : '+count)
+
+         } catch (error) {
+          console.log(error)
+         }
+      }
+      delayCount()
+     },[])
+
+  
   return (
     <>
    
@@ -111,7 +134,11 @@ const Sidebar = () => {
        <nav className="grid gap-y-3 items-start px-2  font-medium lg:px-4">
        {
          navbar.map((item)=>(
-           <Link
+          <div key={item.name}>
+            {
+              item.path==='/dashboard/delay' && delayCount!==0 && <span className='absolute bg-red-500 rounded-full text-white w-5 h-5 text-center align-middle left-6 flex justify-center items-center'>{delayCount}</span>
+            }
+             <Link
            href={item.path}
            className={`flex items-center gap-3 rounded-lg px-3 py-2 cursor-pointer   transition-all hover:text-primary ${pathname===item.path || (item.path === '/dashboard/client' && isClientDashboardPath(pathname)) ?'bg-muted text-primary':'text-muted-foreground'}`}
          >
@@ -120,6 +147,7 @@ const Sidebar = () => {
            }
            {item.name}
          </Link>
+          </div>
          ))
        }
         <div

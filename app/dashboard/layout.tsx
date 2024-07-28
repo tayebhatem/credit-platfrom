@@ -5,6 +5,7 @@ import DashbaordHeader from "@/components/dashboard/DashbaordHeader"
 import Sidebar from "@/components/dashboard/Sidebar"
 import ProgressProvider from "@/providers/ProgressProvider"
 import LoaderProvider from "@/providers/LoaderProvider"
+import { ChatProvider } from "stream-chat-react"
 
 const DashboardLayout = ({children}:{children:ReactNode}) => {
  
@@ -12,7 +13,11 @@ const DashboardLayout = ({children}:{children:ReactNode}) => {
   return (
    <SessionProvider>
   <ProgressProvider>
+   
+
+   
    <LoaderProvider>
+   
      <div className="grid min-h-screen w-full   md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
      <Sidebar/>
 
@@ -35,7 +40,9 @@ const DashboardLayout = ({children}:{children:ReactNode}) => {
         </main>
       </div>
     </div>
+   
     </LoaderProvider>
+   
     </ProgressProvider>
    </SessionProvider>
   )

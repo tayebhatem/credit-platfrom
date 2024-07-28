@@ -43,8 +43,9 @@ const DashbaordHeader = () => {
        <Logo/>
        {
         navbar.map((item)=>(
-        <SheetClose asChild>
+        <SheetClose asChild  key={item.name}>
             <Link
+           
           href={item.path}
           className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl  px-3 py-2  hover:text-foreground ${pathname===item.path?'bg-muted text-foreground':'text-muted-foreground'} `}
         >

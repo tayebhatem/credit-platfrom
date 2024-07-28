@@ -70,25 +70,30 @@ return date
 
 
 export const getAllDelay=async()=>{
-  const sessioon=await account.getSession('current')
-  const user=sessioon.userId
+  const session=await account.getSession('current')
+  const user=session.userId
 
   const data=await database.listDocuments(
       config.databaseId,
       config.clientDelay,
   )
-  const delay =data.documents.filter((item)=>item.client.user.$id===user)
+  const delay =data.documents.filter(item=>item.client.user.$id===user)
 return delay
 }
 
-export const getNotJusDelay=async()=>{
-  const sessioon=await account.getSession('current')
-  const user=sessioon.userId
+export const getNotJusfiedDelayCount=async()=>{
+
 
   const data=await database.listDocuments(
       config.databaseId,
       config.clientDelay,
+      [
+        Query.isNull('justify')
+      ]
   )
-  const delay =data.documents.filter((item)=>item.client.user.$id===user)
-return delay
+  const currentDate=new Date()
+  const count =data.documents.filter((item)=>item.paymentDate<currentDate).length
+
+return count
+
 }
