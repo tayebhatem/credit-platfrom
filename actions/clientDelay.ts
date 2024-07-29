@@ -4,47 +4,30 @@ import { Query } from "appwrite"
 import { format } from "date-fns"
 
 
-export const createClientDelay=async(client:string)=>{
+export const createClientDelay=async(client:string,date:string,days:number)=>{
   try {
-    const date=await getClientDelayDate(client)
-
-    if(!date){
-      await addDelay(client)
-    }
-
-    else{
-        const currentDate = format(new Date(),'yyyy-MM-dd');
-        if(date<currentDate){
-          await addDelay(client)
-        }
-    }
+    const currentDate=new Date(date)
+    const paymentDate = new Date(currentDate);
+    paymentDate.setDate(currentDate.getDate() + days);
+    const data=await database.createDocument(
+      config.databaseId,
+      config.clientDelay,
+      ID.unique(),
+      {
+        client,
+        paymentDate
+      }
+  )
+return data
    
   } catch (error) {
-    
+    console.log(error)
   }
   
 
 }
 
-export const addDelay=async(client:string)=>{
- try {
-  const currentDate = new Date();
-  const paymentDate = new Date(currentDate);
-  paymentDate.setDate(currentDate.getDate() + 33);
-    const data=await database.createDocument(
-        config.databaseId,
-        config.clientDelay,
-        ID.unique(),
-        {
-          client,
-          paymentDate
-        }
-    )
-return data
- } catch (error) {
-  console.log('add error : '+error)
- }
-}
+
 
 export const getClientDelayDate=async(client:string)=>{
  try {
@@ -64,8 +47,31 @@ return date
   console.log('get error : '+error)
  }
 }
+export const getClientLastDelay=async(client:string)=>{
+  try {
+   const data=await database.listDocuments(
+     config.databaseId,
+     config.clientDelay,
+    [
+   Query.equal('client',client),
+   Query.orderDesc('$createdAt'),
+  Query.limit(1)
+    ]
+ )
+ 
+ return data.documents[0]
+  } catch (error) {
+   console.log('get error : '+error)
+  }
+ }
 
-
+export const deleteDelay=async(id:string)=>{
+    await database.deleteDocument(
+      config.databaseId,
+      config.clientDelay,
+      id
+    )
+}
 
 
 

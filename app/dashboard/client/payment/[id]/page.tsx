@@ -1,9 +1,10 @@
 'use client'
 
 
-import { createPayment, updateClientCredit } from '@/actions/createPayment'
+
 import { createTransactionByClientId } from '@/actions/createTransaction'
 import { getPaymentTransaction, getTotalClientTransactions } from '@/actions/getClientTransactions'
+import { createPayment, updateClientCredit } from '@/actions/payment'
 import PaymentDialog from '@/components/dialog/PaymentDialog'
 
 
@@ -32,13 +33,11 @@ const PaymentPage = ({params}:{params:{id:string}}) => {
 
           const newAmount=total-amount
           await updateClientCredit(id)
+
           const transaction=await createTransactionByClientId(id,amount,'PAYMENT')
           if(transaction) {
           await createPayment(transaction.$id,total,newAmount)
-          if(newAmount>0){
-           await createTransactionByClientId(id,newAmount,'CREDIT')
-           
-          }
+         
           setOpen(false)
           fetchTransactions()
           }

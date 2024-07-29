@@ -29,8 +29,8 @@ useEffect(()=>{
    }
    }
    connectUser()
- return async()=>{
-    await client.disconnectUser()
+ return ()=>{
+     client.disconnectUser()
  }
 },[user])
   return (

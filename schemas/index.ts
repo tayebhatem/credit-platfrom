@@ -34,13 +34,16 @@ export const RestSchema=z.object(
 export const AccountSchema=z.object(
     {
         name:z.string().min(1,{
-            message:'الإسم الالكتروني مطلوب'
+            message:'الإسم  مطلوب'
         }),
         phone:z.string().optional(),
-        adress:z.string().optional()
-
+        adress:z.string().optional(),
+        pymentDays:z.string().min(1,{
+            message:'مدة الدفع مطلوبة'
+        }),
     }
 )
+
 export const PasswordSchema=z.object(
     {
         password:z.string().min(6,

@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { FcGoogle } from "react-icons/fc";
 import {  RegisterSchema } from "@/schemas"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { register } from "@/actions/register"
+import { register } from "@/actions/auth/register"
 import { account } from "@/lib/appwrite"
 import { useEffect, useTransition } from "react"
 import GoogleAuth from "@/components/auth/GoogleAuth"

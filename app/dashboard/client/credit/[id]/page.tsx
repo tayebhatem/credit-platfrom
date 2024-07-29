@@ -86,7 +86,7 @@ const CreditPage = ({params}:{params:{id:string}}) => {
     
     <div>
         <TransactionDialog
-  title='أضف إئتمان'
+  title='أضف مبلغ'
   amount=""
   description=''  
   onChange={CreateCredit}
@@ -98,7 +98,7 @@ setOpen={setOpen}
    
     <Button className='gap-x-2 ' onClick={()=>setOpen(true)}>
  <span>
- إضافة إئتمان
+ إضافة مبلغ
  </span>
  <PlusCircle/>
       </Button>

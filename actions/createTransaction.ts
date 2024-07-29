@@ -2,14 +2,13 @@
 
 import { ID, config, database, getClient } from "@/lib/appwrite"
 import { createClientDelay } from "./clientDelay"
+import { getPaymentStatus, updatePaymentStatus } from "./client/paymentStatus"
 
 
 
 
 export const createTransactionByClientId=async(client:string,amount:number,type:'CREDIT'| 'PAYMENT')=>{
-  if(type==='CREDIT'){
-    await createClientDelay(client)
-  }
+ 
     const transaction=await database.createDocument(
         config.databaseId,
         config.clientTransaction,
@@ -20,7 +19,23 @@ export const createTransactionByClientId=async(client:string,amount:number,type:
           type
         }
     )
+    if(type==='CREDIT'){
+      if(transaction){
+      const paymentStatus=transaction.client.paymentStatus as boolean
 
+      if(paymentStatus){
+     const paymentDays=transaction.client.user.paymentDaysNumber as number
+      const response= await createClientDelay(client,transaction.$createdAt,paymentDays)
+      if(response){
+        await updatePaymentStatus(client,false)
+      }
+       
+
+      }
+     
+
+      }
+    }
    
 
 return transaction

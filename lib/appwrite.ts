@@ -16,11 +16,11 @@ export { ID ,Avatars} from 'appwrite';
 
 export const config={
     databaseId:'66a02c2c0037f2813b8f',
-    userTableId:'66a02c88001a68ba36c0',
-    clientTable:'66a02d260003e362834e',
-    clientTransaction:'66a02dc9002e06922fdf',
-    clientPayment:'66a2e30d0001546cebde',
-    clientDelay:'66a19f2f003c89aad0ac',
+    userTableId:'66a6c686000201cfb22a',
+    clientTable:'66a6c6e80024df3d45cc',
+    clientTransaction:'66a6c74f00196e1fa95b',
+    clientPayment:'66a6c7f8003df82e5105',
+    clientDelay:'66a6c85100076d87d9f2',
 }
 export const getUser=async()=>{
 try {
@@ -83,7 +83,7 @@ export const logout=async()=>{
         console.log(error)
     }
 }
-export const updateUser=async(name:string,phone:string | undefined,adress:string | undefined)=>{
+export const updateUser=async(name:string,phone:string | undefined,adress:string | undefined,paymentDaysNumber:number)=>{
     try {
         const session=await account.getSession('current')
         const userId=session.userId
@@ -94,7 +94,8 @@ export const updateUser=async(name:string,phone:string | undefined,adress:string
        {
          name,
          phone,
-         adress
+         adress,
+         paymentDaysNumber
        }
        )
     } catch (error) {
@@ -127,6 +128,16 @@ export const isUserVerified=async()=>{
 
     return verfied
 }
-export const verifyAccount=async()=>{
 
+
+export const getPaymentDaysNumber=async()=>{
+    const session=await account.getSession('current')
+    const id=session.userId
+    const user=await database.getDocument(
+        config.databaseId,
+        config.userTableId,
+        id
+    )
+
+    return user.paymentDaysNumber as number
 }

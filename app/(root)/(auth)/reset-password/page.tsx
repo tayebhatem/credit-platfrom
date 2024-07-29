@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { FcGoogle } from "react-icons/fc";
 import { LoginSchema, PasswordSchema } from "@/schemas"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { login } from "@/actions/login"
+import { login } from "@/actions/auth/login"
 import { useRouter } from "next/navigation"
 import { useEffect, useTransition } from "react"
 import { account } from "@/lib/appwrite"

@@ -30,15 +30,16 @@ const AccountPage = () => {
     defaultValues: {
       name: user?.name,
       phone:user?.phone,
-      adress:user?.adress
+      adress:user?.adress,
+      pymentDays:user?.paymentDaysNumber
     },
   })
 
   function onSubmit(values: z.infer<typeof AccountSchema>) {
    update(async()=>{
-    const {name,phone,adress}=values
+    const {name,phone,adress,pymentDays}=values
       try {
-        await updateUser(name,phone,adress)
+        await updateUser(name,phone,adress,parseInt(pymentDays as string))
         toast.success(
           'نجاح',
       {
@@ -52,8 +53,9 @@ const AccountPage = () => {
    })
   }
 useEffect(()=>{
-
-},[])
+  form.setValue("name",user?.name)
+  form.setValue("pymentDays",user?.paymentDaysNumber)
+},[user])
 if(loading) return <div className="w-full h-full space-y-8 py-4">
 <div className="space-y-4">
 <Skeleton className="max-w-44 h-4" />
@@ -82,7 +84,7 @@ if(loading) return <div className="w-full h-full space-y-8 py-4">
                 <Input placeholder="tayeb hatem" {...field} className="capitalize" defaultValue={user?.name} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+              سيظهر هذا الاسم على فاتورتك
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -95,10 +97,10 @@ if(loading) return <div className="w-full h-full space-y-8 py-4">
             <FormItem>
               <FormLabel>رقم الهاتف</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="07" {...field} className="" defaultValue={user?.phone} />
+                <Input type="number" placeholder="" {...field}  className="" defaultValue={user?.phone} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+              سيظهر رقم الهاتف هذا على فاتورتك
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -119,7 +121,23 @@ if(loading) return <div className="w-full h-full space-y-8 py-4">
                 />
               </FormControl>
               <FormDescription>
-                You can <span>@mention</span> other users and organizations.
+              سيظهر هذا العنوان على فاتورتك
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <FormField
+          control={form.control}
+          name="pymentDays"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>(الأيام) مدة الدفع </FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="" {...field}  className="" defaultValue={user?.paymentDaysNumber} />
+              </FormControl>
+              <FormDescription>
+          العدد الأقصى لأيام الدفع  
               </FormDescription>
               <FormMessage />
             </FormItem>

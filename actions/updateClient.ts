@@ -1,4 +1,5 @@
-import { Client } from "@/app/dashboard/client/page"
+
+import { Client } from "@/app/dashboard/client/layout"
 import { account, config, database, getClient } from "@/lib/appwrite"
 import { Query } from "appwrite"
 
