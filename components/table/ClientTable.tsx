@@ -22,7 +22,7 @@ import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import React, { useContext, useEffect, useRef, useState, useTransition } from "react"
-import { Plus,Import, PlusCircle } from "lucide-react"
+import { Plus,Import, PlusCircle, LockIcon } from "lucide-react"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import ClientDialog from "../dialog/ClientDialog"
 import { CleintContext } from "@/context/ClientContext"
@@ -32,6 +32,8 @@ import { toast } from "sonner";
 import { ProgressContext } from "@/providers/ProgressProvider";
 import { Client } from "@/app/dashboard/client/layout";
 import TableLoader from "../TableLoader";
+import { useUserSubscription } from "@/hooks/useUserSubscription";
+import { useRouter } from "next/navigation";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,10 +44,12 @@ export function ClientTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+ 
 const {fetchClients,loading}=useContext(CleintContext)
 const {setShowProgress,setProgress}=useContext(ProgressContext)
 const [isLoading,uplaod]=useTransition()
-
+const subscription=useUserSubscription()
+const router=useRouter()
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   uplaod(()=>{
     const files = event.target.files;
@@ -164,11 +168,17 @@ const [open,setOpen]=useState(false)
           
     <ImportButton onChange={handleFileChange} title="إستراد الزبائن" disabled={isLoading}/>
 
-    <Button className="gap-x-2"  onClick={()=>setOpen(true)}>
+    <Button className="gap-x-2"  onClick={()=>{
+        table.getRowModel().rows?.length>=10 && subscription?.type==='FREE' ? router.push('/dashboard/subscription'):
+      setOpen(true)
+    }}>
   <span className="">
   أضف زبون
   </span>
-  <PlusCircle/>
+  {
+    table.getRowModel().rows?.length>=10 && subscription?.type==='FREE' ?<LockIcon/> : <PlusCircle/>
+  }
+
 </Button>
 
         </div>

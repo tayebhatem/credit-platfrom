@@ -1,7 +1,8 @@
 'use server'
+import { Delay } from "@/app/dashboard/delay/page"
 import { ID, account, config, database } from "@/lib/appwrite"
 import { Query } from "appwrite"
-import { format } from "date-fns"
+import { format, formatDate } from "date-fns"
 
 
 export const createClientDelay=async(client:string,date:string,days:number)=>{
@@ -76,29 +77,39 @@ export const deleteDelay=async(id:string)=>{
 
 
 export const getAllDelay=async()=>{
-  const session=await account.getSession('current')
-  const user=session.userId
+ 
 
   const data=await database.listDocuments(
       config.databaseId,
       config.clientDelay,
   )
-  const delay =data.documents.filter(item=>item.client.user.$id===user)
-return delay
+  const delayData =data.documents.map(
+    (item)=>{
+      const delay:Delay={
+           id:item.$id,
+           date:formatDate(item.paymentDate,'yyyy-MM-dd'),
+           justify:item.justify,
+           username:item.client.username
+      }
+      return delay
+    }
+  )
+
+return delayData
 }
 
-export const getNotJusfiedDelayCount=async()=>{
+
+
+export const getDelayCount=async()=>{
 
 
   const data=await database.listDocuments(
       config.databaseId,
       config.clientDelay,
-      [
-        Query.isNull('justify')
-      ]
+      
   )
   const currentDate=new Date()
-  const count =data.documents.filter((item)=>item.paymentDate<currentDate).length
+  const count =data.total 
 
 return count
 

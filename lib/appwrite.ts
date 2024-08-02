@@ -21,6 +21,7 @@ export const config={
     clientTransaction:'66a6c74f00196e1fa95b',
     clientPayment:'66a6c7f8003df82e5105',
     clientDelay:'66a6c85100076d87d9f2',
+    subscription:'66ac9636002ccba4aa52',
 }
 export const getUser=async()=>{
 try {
