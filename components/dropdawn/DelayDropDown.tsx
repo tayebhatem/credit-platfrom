@@ -9,15 +9,13 @@ import {
 import { Button } from "@/components/ui/button"
 import {Trash,UserPen} from 'lucide-react'
 import { ConfirmDialog } from '../ConfirmDialog'
-import { CreditContext } from '@/context/CreditContext'
-import { Transaction } from '@/app/dashboard/credit/page'
-import TransactionDialog from '../dialog/TransactionDialog'
-import { updateTransaction } from '@/actions/updateTransaction'
+
+
 import { usePathname } from 'next/navigation'
 import { TransactionContext } from '@/context/TransactionContext'
-import { deleteTransaction } from '@/actions/deleteTransaction'
-import { Payment } from '@/app/dashboard/client/payment/[id]/page'
+
 import { Delay } from '@/app/dashboard/delay/page'
+import { deleteTransaction } from '@/actions/transaction'
 
 
 const DelayDropDown = ({delay}:{delay:Delay}) => {

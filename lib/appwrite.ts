@@ -22,6 +22,7 @@ export const config={
     clientPayment:'66a6c7f8003df82e5105',
     clientDelay:'66a6c85100076d87d9f2',
     subscription:'66ac9636002ccba4aa52',
+    supplier:'66adf35300258c35865d'
 }
 export const getUser=async()=>{
 try {

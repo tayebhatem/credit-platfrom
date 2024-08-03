@@ -15,16 +15,16 @@ export const pack=[
 
              checked:true
             },
-          
+            {text:'الدفع و الإطلاع على إئتمان الموردين',
+            checked:true
+            },
             {text:'إطلاع على قائمة تأخر الدفع',
              checked:false
             },
             {text:  'حساب الزبون مفعل',
             checked:false
            },
-            {text:' التواصل مع الزبائن',
-             checked:false
-            },
+          
         ],
         status:'current',
         price:0,
@@ -48,15 +48,16 @@ export const pack=[
 
              checked:true
             },
+            {text:'الدفع و الإطلاع على إئتمان الموردين',
+            checked:true
+        },
             {text:'إطلاع على قائمة تأخر الدفع',
              checked:true
             },
             {text:  'حساب الزبون مفعل',
             checked:false
            },
-            {text:' التواصل مع الزبائن',
-             checked:false
-            },
+           
            
         ],
         status:'waiting',
@@ -79,15 +80,18 @@ export const pack=[
 
              checked:true
             },
+            {
+                text:'الدفع و الإطلاع على إئتمان الموردين',
+            checked:true
+            },
+            {text:'إطلاع على قائمة تأخر الدفع',
+            checked:true
+           },
             {text:  'حساب الزبون مفعل',
              checked:true
             },
-            {text:'إطلاع على قائمة تأخر الدفع',
-             checked:true
-            },
-            {text:' التواصل مع الزبائن',
-             checked:true
-            },
+           
+           
            
         ],
         status:'waiting',

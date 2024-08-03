@@ -107,7 +107,15 @@ export const ConfirmCodeSchema = z.object({
 
     }
 )
+export const SupplierSchema=z.object(
+    {
+        name:z.string().min(1,{
+            message:'الإسم  مطلوب'
+        }),
+      
 
+    }
+)
 export const ClientTransactionSchema=z.object(
     {
        

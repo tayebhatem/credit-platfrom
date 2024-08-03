@@ -1,6 +1,6 @@
 'use client'
-import { getAllClients } from '@/actions/getAllClients'
 
+import { getAllClients } from '@/actions/client';
 import { CleintContext } from '@/context/ClientContext'
 import { Models } from 'appwrite'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'

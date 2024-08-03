@@ -23,10 +23,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ClientSchema } from '@/schemas'
-import { createClient } from '@/actions/createClient'
+
 import { CleintContext } from '@/context/ClientContext'
-import { updateClient } from '@/actions/updateClient'
+
 import { Client } from '@/app/dashboard/client/layout'
+import { createClient, updateClient } from '@/actions/client'
 
 
 const ClientDialog = (

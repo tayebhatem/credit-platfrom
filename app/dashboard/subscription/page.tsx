@@ -3,9 +3,11 @@ import { addSubscription } from '@/actions/subscription'
 import SubscriptionDialog from '@/components/dialog/SubscriptionDialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
 import { pack } from '@/constant/data'
 import { useUser } from '@/hooks/useUser'
 import { useUserSubscription } from '@/hooks/useUserSubscription'
+import { format } from 'date-fns'
 import { CheckCircle, X,  } from 'lucide-react'
 import { redirect, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -38,16 +40,26 @@ open={open}
 setOpen={setOpen}
 />
     <div>
-       
-       <p className='text-center text-muted-foreground mb-4'>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora provident adipisci, expedita, consequuntur blanditiis ut praesentium odit suscipit numquam iusto ab illum quisquam 
-     </p>
+       <Card className='text-right p-4 my-4'>
+        <CardContent>
+          <div className='text-lg font-medium'>تاريخ إنتهاء الصلاحية </div>
+          <div className='text-lg text-muted-foreground my-2'>{format(subscription?.subscriptionDate as Date,'yyyy-MM-dd')}</div>
+
+          <div className='text-lg font-medium'>نوع الإشتراك</div>
+          <div className='text-lg text-muted-foreground my-2'>{
+            subscription?.type==='FREE'?'مجاني':
+            subscription?.type==='STANDARD'?'أساسي':
+             'غير محدود'
+          }</div>
+        </CardContent>
+       </Card>
+     
      <div className='grid  md:grid-cols-3   m-auto  gap-4'>
     
    {
       pack.map(
           (item,index)=>(
-              <Card key={index}>
+              <Card key={index} className={item.type===subscription?.type ?'border-4 border-primary':''}>
               <CardTitle className='text-3xl text-center py-4'>{item.title}</CardTitle>
               <CardFooter className='flex flex-col gap-y-3'>
                  <div className='flex flex-row gap-x-2 items-center'>
@@ -101,6 +113,9 @@ setOpen={setOpen}
    }
     
   </div>
+  <p className='text-center text-muted-foreground mt-8'>
+      يمكنك الإشتراك أيضا عن طريق الإتصال بالرقم 0779674976
+     </p>
   </div>
     </>
     

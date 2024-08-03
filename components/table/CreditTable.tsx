@@ -32,10 +32,10 @@ import ImportButton from "../ImportButton"
 import DatePicker from "../DatePicker";
 import CreditDialog from "../dialog/CreditDialog";
 import { CreditContext } from "@/context/CreditContext";
-import { ProgressBar } from "../ProgressBar";
-import { createTransactionByClientUsername } from "@/actions/createTransaction";
+
 import TableLoader from "../TableLoader";
 import { ProgressContext } from "@/providers/ProgressProvider";
+import { createTransactionByClientUsername } from "@/actions/transaction";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]

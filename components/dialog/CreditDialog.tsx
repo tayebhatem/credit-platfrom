@@ -25,9 +25,9 @@ import { Input } from "@/components/ui/input"
 import { CreditContext } from '@/context/CreditContext'
 import { ClientTransactionSchema } from '@/schemas'
 import { Transaction } from '@/app/dashboard/credit/page'
-import { updateTransaction } from '@/actions/updateTransaction'
-import { createTransactionByClientUsername } from '@/actions/createTransaction'
+
 import { LoaderContext } from '@/providers/LoaderProvider'
+import { createTransactionByClientUsername } from '@/actions/transaction'
 
 
 

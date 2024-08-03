@@ -5,10 +5,10 @@ import {
   ColumnDef,
 
 } from "@tanstack/react-table"
-import { getAllDelay } from '@/actions/clientDelay';
+
 import { DelayTable } from '@/components/table/DelayTable';
 import { DelayContext } from '@/context/DelayContext';
-import { useUser } from '@/hooks/useUser';
+import { getAllDelay } from '@/actions/client';
 
 export const columns: ColumnDef<Delay>[] = [
   {

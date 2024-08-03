@@ -21,103 +21,35 @@ import {
 import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useContext, useEffect, useRef, useState, useTransition } from "react"
-import { Plus,Import, PlusCircle, LockIcon } from "lucide-react"
-import { Dialog, DialogTrigger } from "@/components/ui/dialog"
+import React, { useContext, useEffect, useRef, useState } from "react"
+
 import ClientDialog from "../dialog/ClientDialog"
-import { CleintContext } from "@/context/ClientContext"
+
 import ImportButton from "../ImportButton"
-import { toast } from "sonner";
-import { ProgressContext } from "@/providers/ProgressProvider";
-import { Client } from "@/app/dashboard/client/layout";
+
 import TableLoader from "../TableLoader";
-import { useUserSubscription } from "@/hooks/useUserSubscription";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/actions/client";
+
+import { SupplierContext } from "@/context/SupplierContext";
+import SupplierDialog from "../dialog/SupplierDialog";
+import { createSupplier } from "@/actions/supplier";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function ClientTable<TData, TValue>({
+export function SupplierTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
  
-const {fetchClients,loading}=useContext(CleintContext)
-const {setShowProgress,setProgress}=useContext(ProgressContext)
-const [isLoading,uplaod]=useTransition()
-const subscription=useUserSubscription()
-const router=useRouter()
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  uplaod(()=>{
-    const files = event.target.files;
-  
-    if (files && files[0]) {
-  setShowProgress(true)
-      const file = files[0];
-        
-        try {
-          const reader = new FileReader();
-            
-          reader.onload = (e) => {
-              const data = new Uint8Array(e.target?.result as ArrayBuffer);
-              const workbook = XLSX.read(data, { type: 'array' });
+const {loading}=useContext(SupplierContext)
 
-              const sheetName = workbook.SheetNames[0];
-              const worksheet = workbook.Sheets[sheetName];
-              const clientData = XLSX.utils.sheet_to_json(worksheet);
-
-              const progress=100/clientData.length
-              
-              clientData.map(async(item:any)=>{
-               if(!item) return
-
-                const client:Client={
-                id:"",
-                username:item.client,
-                password:item.motpass,
-                name:item.nom,
-                maxcredit:item.max
-                }
-              try {
-                await createClient(client.username,client.password,client.name,parseFloat(client.maxcredit))
-
-                setProgress((prevProgress: number)=>prevProgress+progress)
-                
-              } catch (error) {
-                
-              }
-              })
-          
-              
-          };
-
-          reader.readAsArrayBuffer(file);
-          
-          
-          fetchClients()
-          
-        } catch (error) {
-          console.log(error)
-        }finally{
-          setShowProgress(false)
-          fetchClients()
-          setShowProgress(false)
-          toast.success(
-            'نجاح',
-    {
-          description:'تم إضاقة الزبائن'
-    }
-            
-           )
-        }
-        
-       
-    }
-  })
-};
+const onCreate=async(name:string)=>{
+    await createSupplier(name)
+    setOpen(false)
+  }
+ 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
       )
@@ -134,28 +66,18 @@ const router=useRouter()
   })
 const [open,setOpen]=useState(false)
 
-const isLocked=()=>{
-  if((table.getRowModel().rows?.length>=10 && subscription?.type==='FREE') ||(table.getRowModel().rows?.length>=2 && subscription?.type==='STANDARD') ){
-    return true
-  }else{
-    return false
-  }
-}
+
   return (
     <div>
-        <ClientDialog 
+        <SupplierDialog 
        open={open}
        setOpen={setOpen}
-      title="إضافة زبون" 
+      title="إضافة" 
       description=" Make changes to your profile here. Click save when you're done."
-      type="CREATE"
-      client={{
-        id:"",
-        username:"",
-        password:"",
-        name:"",
-        maxcredit:"",
-        
+      onChange={onCreate}
+      supplier={{
+        id:'',
+        name:''
       }}
        />
 
@@ -163,29 +85,24 @@ const isLocked=()=>{
 
      
         <Input
-          placeholder="...إبحث عن زبون"
+          placeholder="...إبحث عن مورد"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="col-span-2 md:max-w-sm md:col-span-4 text-right order-last md:order-first"
+          className="col-span-2 md:max-w-sm md:col-span-5 text-right order-last md:order-first"
         />
         
           
-    <ImportButton onChange={handleFileChange} title="إستراد الزبائن" disabled={isLoading}/>
+    
 
     <Button className="gap-x-2"  onClick={()=>{
-      isLocked() ? router.push('/dashboard/subscription'):
       setOpen(true)
     }}>
-       {
-   isLocked() && <LockIcon/>
-  }
   <span className="">
-  أضف زبون
+  أضف مورد
   </span>
-  <PlusCircle/>
- 
+  
 
 </Button>
 
@@ -227,7 +144,7 @@ const isLocked=()=>{
           </TableRow>
           )
           :
-          table.getRowModel().rows?.length>0 ? (
+          table && table?.getRowModel()?.rows?.length>0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -236,7 +153,7 @@ const isLocked=()=>{
                 
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===3 && 'capitalize'}`} hidden={cell.column.columnDef.enableHiding}>
+                  <TableCell key={cell.id} className={` text-lg font-medium ${  cell.column.getIndex()===1 && 'capitalize'}`} hidden={cell.column.columnDef.enableHiding}>
                     {
                         
                   flexRender(cell.column.columnDef.cell, cell.getContext())
@@ -246,13 +163,7 @@ const isLocked=()=>{
                 ))}
               </TableRow>
             ))
-          ) :isLoading? (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center text-lg">
-              Loading ....
-              </TableCell>
-            </TableRow>
-          ):
+          ) :
           (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center text-lg">

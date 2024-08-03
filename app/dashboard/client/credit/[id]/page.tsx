@@ -1,9 +1,10 @@
 'use client'
 
 
-import { createTransactionByClientId } from '@/actions/createTransaction'
-import { getClientMaxCredit, getCreditTransactions, getTotalClientTransactions } from '@/actions/getClientTransactions'
 
+
+import { getClientMaxCredit, getCreditTransactions } from '@/actions/client'
+import { createTransactionByClientId } from '@/actions/transaction'
 import { Transaction } from '@/app/dashboard/credit/page'
 import DatePicker from '@/components/DatePicker'
 import TransactionDialog from '@/components/dialog/TransactionDialog'

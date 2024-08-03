@@ -7,7 +7,7 @@ import {
 
 import { ClientTable } from '@/components/table/ClientTable'
 import { Models } from 'appwrite'
-import { getAllClients } from '@/actions/getAllClients'
+
 import { CleintContext } from '@/context/ClientContext'
 import ClientDropDawn from '@/components/dropdawn/ClientDropDawn'
 

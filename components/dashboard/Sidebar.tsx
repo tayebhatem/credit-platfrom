@@ -30,9 +30,10 @@ import { logout } from '@/lib/appwrite'
 import { LoaderContext } from '@/providers/LoaderProvider'
 
 import { useUser } from '@/hooks/useUser'
-import { getDelayCount } from '@/actions/clientDelay'
+
 import { Button } from '../ui/button'
 import { useUserSubscription } from '@/hooks/useUserSubscription'
+import { getDelayCount } from '@/actions/client'
  export const navbar=[
     { 
       id:1,

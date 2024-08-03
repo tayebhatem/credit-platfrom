@@ -8,9 +8,10 @@ import {
 import { CreditTable } from '@/components/table/CreditTable'
 
 import { CreditContext } from '@/context/CreditContext'
-import { getAllTransactions } from '@/actions/getAllTransactions'
+
 import { format } from 'date-fns'
 import TransactionDropDawn from '@/components/dropdawn/TransactionDropDawn'
+import { getAllTransactions } from '@/actions/transaction'
 
 
 

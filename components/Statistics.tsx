@@ -1,6 +1,7 @@
 'use client'
-import { getAllClients } from '@/actions/getAllClients'
-import { getAllTransactions, getTotalTransactions } from '@/actions/getAllTransactions'
+
+import { getAllClients } from '@/actions/client'
+import { getTotalTransactions } from '@/actions/transaction'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Building, Users, Users2, Users2Icon,Truck,CurrencyIcon,DollarSign } from 'lucide-react'
 import React, { useEffect, useState } from 'react'

@@ -12,11 +12,12 @@ import { ConfirmDialog } from '../ConfirmDialog'
 import { CreditContext } from '@/context/CreditContext'
 import { Transaction } from '@/app/dashboard/credit/page'
 import TransactionDialog from '../dialog/TransactionDialog'
-import { updateTransaction } from '@/actions/updateTransaction'
+
 import { usePathname } from 'next/navigation'
 import { TransactionContext } from '@/context/TransactionContext'
-import { deleteTransaction } from '@/actions/deleteTransaction'
+
 import { Payment } from '@/app/dashboard/client/payment/[id]/page'
+import { deleteTransaction, updateTransaction } from '@/actions/transaction'
 
 
 const TransactionDropDawn = ({transaction}:{transaction:Transaction | Payment}) => {

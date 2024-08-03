@@ -12,26 +12,25 @@ import { Dialog } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import {Trash,UserPen,FileText,DollarSign} from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { CleintContext } from '@/context/ClientContext'
-import { Models } from 'appwrite'
 import { ConfirmDialog } from '../ConfirmDialog'
-
-import ClientDialog from '../dialog/ClientDialog'
-import { deleteClient } from '@/actions/client'
-const ClientDropDawn = ({client}:{client:Models.Document | undefined}) => {
+import { SupplierContext } from '@/context/SupplierContext'
+import { Supplier } from '@/app/dashboard/supplier/page'
+import SupplierDialog from '../dialog/SupplierDialog'
+import { deleteSupplier, updateSupplier } from '@/actions/supplier'
+const SupplierDropDown = ({supplier}:{supplier:Supplier}) => {
   
     const router=useRouter();
    const pathname=usePathname();
-   const {fetchClients}=useContext(CleintContext)
+   const {fetchSuppliers}=useContext(SupplierContext)
    const [openConfirm, setopenConfirm] = useState(false)
 const [open,setOpen]=useState(false)
-   const onChange=async()=>{
+
+   const onDelete=async()=>{
          try {
-        const id=client?.$id 
-        if(!id) return
-      await deleteClient(id)
+       
+      await deleteSupplier(supplier.id)
       
-       fetchClients()
+      fetchSuppliers()
         
          } catch (error:any) {
             console.log(error.message)
@@ -39,37 +38,42 @@ const [open,setOpen]=useState(false)
           setopenConfirm(false)
          }
    }
-   const editClient=(client:Models.Document | undefined)=>{
+
+  const onUpdate=async(name:string)=>{
+     await updateSupplier(name,supplier.id)
+    setOpen(false)
+  }
+   const editClient=(supplier:Supplier)=>{
     setOpen(true)
-    
-    
    }
     const dropdawn=[
         { 
          name:'إئتمان',
          icon:<FileText/>,
-         action:(client:Models.Document | undefined)=>{router.push(`${pathname}/credit/${client?.$id}`)}
+         action:(supplier:Supplier)=>{router.push(`${pathname}/credit/${supplier.id}`)}
        },
        { 
         name:'دفع',
         icon:<DollarSign/>,
-        action:(client:Models.Document | undefined)=>{router.push(`${pathname}/payment/${client?.$id}`)}
+        action:(supplier:Supplier)=>{router.push(`${pathname}/payment/${supplier.id}`)}
       },
        { 
         name:'تعديل',
         icon:<UserPen/>,
-        action:(client:Models.Document | undefined)=>{editClient(client)}
+        action:(supplier:Supplier)=>{editClient(supplier)}
       },
       { 
         name:'حذف',
         icon:<Trash/>,
-        action:(client:Models.Document | undefined)=>{setopenConfirm(true)}
+        action:(supplier:Supplier)=>{setopenConfirm(true)}
       },
       ]
 
   return (
   <>
-  <ConfirmDialog onChange={onChange} open={openConfirm} onOpenChange={setopenConfirm}/>
+  <ConfirmDialog onChange={onDelete} open={openConfirm} onOpenChange={setopenConfirm}/>
+
+
     <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button variant="ghost" className="h-8 w-8 p-0">
@@ -84,7 +88,7 @@ const [open,setOpen]=useState(false)
           <DropdownMenuItem
           key={item.name}
       className='cursor-pointer items-center text-muted-foreground gap-x-2'
-        onClick={()=>item.action(client)}
+        onClick={()=>item.action(supplier)}
       >
         {item.icon}
         {item.name}
@@ -96,22 +100,14 @@ const [open,setOpen]=useState(false)
     </DropdownMenuContent>
   </DropdownMenu>
   <Dialog open={open} onOpenChange={setOpen}>
-  <ClientDialog 
-  title='تعديل زبون' 
+  <SupplierDialog 
+  title='تعديل ' 
   description='' 
-  type='UPDATE'
+  onChange={onUpdate}
   open={open}
   setOpen={setOpen}
-  client={
-    {
-       id:client?.$id as string,
-      username:client?.username,
-      password:client?.password,
-      name:client?.name,
-      maxcredit:client?.maxcredit as string
-
-    }
-  }
+  supplier={supplier}
+  
    />
   </Dialog>
  
@@ -119,4 +115,4 @@ const [open,setOpen]=useState(false)
   )
 }
 
-export default ClientDropDawn
+export default SupplierDropDown

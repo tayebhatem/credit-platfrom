@@ -1,11 +1,11 @@
 'use server'
 import { ID, config, database, getClient } from "@/lib/appwrite"
 import { Query } from "appwrite"
-import { updateTransactionVisibility } from "./updateTransaction"
-import { deleteDelay, getClientLastDelay } from "./clientDelay"
+
 import { format } from "date-fns"
-import { createTransactionByClientId } from "./createTransaction"
-import { updatePaymentStatus } from "./client/paymentStatus"
+
+import { deleteDelay, getClientLastDelay } from "./client"
+import { createTransactionByClientId, updateTransactionVisibility } from "./transaction"
 
 
 
@@ -44,6 +44,8 @@ export const createPayment=async(transaction:string,oldAmount:number,newAmount:n
     }
 return data
 }
+
+
 export const getlastpayment=async()=>{
     const data=await database.listDocuments(
       config.databaseId,
@@ -67,4 +69,28 @@ export const updateClientCredit=async(id:string)=>{
     await updateTransactionVisibility(element.$id)
   });
     
+}
+
+
+
+export const getPaymentStatus=async(id:string)=>{
+  const status=await database.getDocument(
+      config.databaseId,
+      config.clientTable,
+      id
+  )
+return status.paymentStatus as boolean
+}
+
+export const updatePaymentStatus=async(id:string,paymentStatus:boolean)=>{
+  const data=await database.updateDocument(
+      config.databaseId,
+      config.clientTable,
+      id,
+      {
+       paymentStatus
+      }
+  )
+
+  return data
 }

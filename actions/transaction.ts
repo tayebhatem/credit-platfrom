@@ -1,6 +1,96 @@
-import { account, config, database } from "@/lib/appwrite"
+import { ID, account, config, database, getClient } from "@/lib/appwrite"
+import { createClientDelay } from "./client"
+
 import { Query } from "appwrite"
 import { format } from "date-fns"
+import { updatePaymentStatus } from "./payment"
+
+
+export const createTransactionByClientId=async(client:string,amount:number,type:'CREDIT'| 'PAYMENT')=>{
+ 
+    const transaction=await database.createDocument(
+        config.databaseId,
+        config.clientTransaction,
+        ID.unique(),
+        {
+          client,
+          amount,
+          type
+        }
+    )
+    if(type==='CREDIT'){
+      if(transaction){
+      const paymentStatus=transaction.client.paymentStatus as boolean
+
+      if(paymentStatus){
+     const paymentDays=transaction.client.user.paymentDaysNumber as number
+      const response= await createClientDelay(client,transaction.$createdAt,paymentDays)
+      if(response){
+        await updatePaymentStatus(client,false)
+      }
+       
+
+      }
+     
+
+      }
+    }
+   
+
+return transaction
+}
+
+export const createTransactionByClientUsername=async(username:string,amount:number)=>{
+    const user=await getClient(username)
+        if(!user) throw new Error('إسم المستخدم غير موجود')
+       const client=user.$id
+      const transaction=await createTransactionByClientId(client,amount,'CREDIT')
+    return transaction
+    
+}
+export const deleteTransaction=async(id:string)=>{
+  
+    await database.deleteDocument(
+         config.databaseId,
+         config.clientTransaction,
+         id,
+    
+     )
+    
+}
+
+
+
+export const updateTransaction=async(id:string,amount:number)=>{
+    
+    const data=await database.updateDocument(
+      config.databaseId,
+      config.clientTransaction,
+      id,
+      {
+       amount,
+      }
+    )
+
+
+    return data
+}
+export const updateTransactionVisibility=async(id:string)=>{
+  
+const data=await database.updateDocument(
+  config.databaseId,
+  config.clientTransaction,
+  id,
+  {
+   hidden:true,
+  }
+)
+
+
+return data
+}
+
+
 
 export const getAllTransactions=async()=>{
     try {
